@@ -25,6 +25,8 @@ export class FormInspirationComponent {
           const newItem = {
               id: Date.now(),
               title: this.title,
+              description: this.description,
+              date: new Date()
           };
           this.handleSubmit.emit(newItem)
           alert('Item added successfully!');

@@ -111,75 +111,62 @@
                 </div>
             </div>
         </div>
-        <div class="row-three">
+
+        <div class="row-three gap-2">
             <div class="moment-rw-one">
                 <h1>Moment of the Day</h1>
             </div>
+
             <div class="moment-rw-two">
-                <div class="container">
+
+                <div class="container" *ngFor="let item of momentsToday; let i = index">
                     <div class="child-rw-one">
                         <div class="child-container">
                             <div class="box">
-                                <p>WED</p>
+                                <p>{{ item.dayOfWeek }}</p>
 
-                                <span>12</span>
+                                <span>{{ item.dayOfMonth }}</span>
                             </div>
-                            <p class="time">9:00 am</p>
+                            <p class="time">{{item.hours}}:{{item.minutes}} {{item.amPm}}</p>
                         </div>
                     </div>
                     <div class="child-rw-two">
                         <div class="small-title">
-                            your daily affirmation
+                            {{item.title}}
                         </div>
                         <div class="description">
-                            I am capable of achievering greatnees every challenge is an opportunity for grownth i am
-                            worthy of love respect.
+                            {{item.description}}
                         </div>
                     </div>
-                    <div class="child-rw-three"></div>
+
+                    <div class="child-rw-three">
+                        <img [src]="item.image" [alt]="item.title">
+                    </div>
                 </div>
+
             </div>
         </div>
         <div class="row-four">
-            <div class="container-old-moment">
-                <div class="row-old-title">
-                    <p>November 2024</p>
+            <div *ngFor="let group of groupedMomentsArray" class="container-old-moment">
+                <div class="row-old-title flex justify-start items-center">
+                    <p>{{ group.month }} {{ group.year }}</p>
                 </div>
                 <div class="row-old-content">
-
-                    <div class="child-container">
+                    <div class="child-container border-t-2 border-b-2 border-gray-300" *ngFor="let item of group.moments">
                         <div class="box">
-                            <p>FRI</p>
-
-                            <span>8</span>
+                            <p>{{ item.dayOfWeek }}</p>
+                            <span>{{ item.dayOfMonth }}</span>
                         </div>
                         <div class="text-container">
-
-
-                            <div class="small-title">what i was grateful for </div>
-                            <div class="description">My family who remember me.</div>
-                        </div>
-                    </div>
-
-
-                    <div class="child-container">
-                        <div class="box">
-                            <p>MON</p>
-
-                            <span>2</span>
-                        </div>
-                        <div class="text-container">
-
-
-                            <div class="small-title">what i was grateful for </div>
-                            <div class="description">Challenge is an opportunity for grownth i am worthy of love
-                                respect..</div>
+                            <div class="small-title">{{ item.title }}</div>
+                            <div class="description">{{ item.description }}</div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
+        
+
         <div class="row-five">
             <div class="container-achivements">
 
@@ -196,128 +183,22 @@
                 <div class="container-content">
                     <div class="container-item">
 
-                        <div class="box">
+                        <div class="box" *ngFor="let item of allAchievements; let i = index">
 
                             <div class="date">
-                                <p>Dec 20, 2024 - Mon</p>
-                                <span>9:34 am</span>
+                                <p>{{item.month}} {{item.dayOfMonth}}, {{item.year}} - {{item.dayOfWeek}}</p>
+                                <span>{{item.hours}}:{{item.minutes}} {{item.amPm}}</span>
                             </div>
 
-                            <div class="description">i am capable of achieving greatness every challenge is an
-                                opportunity for growth iam worthy of love respect...</div>
+                            <div class="description">{{item.description}}</div>
                             <div class="image">
-                                <div class="wrapper"></div>
-                            </div>
-                        </div>
-                        <div class="box">
-
-                            <div class="date">
-                                <p>Dec 20, 2024 - Mon</p>
-                                <span>9:34 am</span>
-                            </div>
-
-                            <div class="description">i am capable of achieving greatness every challenge is an
-                                opportunity for growth iam worthy of love respect...</div>
-                            <div class="image">
-                                <div class="wrapper"></div>
-                            </div>
-                        </div>
-
-                        <div class="box">
-
-                            <div class="date">
-                                <p>Dec 20, 2024 - Mon</p>
-                                <span>9:34 am</span>
-                            </div>
-
-                            <div class="description">i am capable of achieving greatness every challenge is an
-                                opportunity for growth iam worthy of love respect...</div>
-                            <div class="image">
-                                <div class="wrapper"></div>
-                            </div>
-                        </div>
-
-                        <div class="box">
-
-                            <div class="date">
-                                <p>Dec 20, 2024 - Mon</p>
-                                <span>9:34 am</span>
-                            </div>
-
-                            <div class="description">i am capable of achieving greatness every challenge is an
-                                opportunity for growth iam worthy of love respect...</div>
-                            <div class="image">
-                                <div class="wrapper"></div>
-                            </div>
-                        </div>
-                        <div class="box">
-
-                            <div class="date">
-                                <p>Dec 20, 2024 - Mon</p>
-                                <span>9:34 am</span>
-                            </div>
-
-                            <div class="description">i am capable of achieving greatness every challenge is an
-                                opportunity for growth iam worthy of love respect...</div>
-                            <div class="image">
-                                <div class="wrapper"></div>
-                            </div>
-                        </div>
-                        <div class="box">
-
-                            <div class="date">
-                                <p>Dec 20, 2024 - Mon</p>
-                                <span>9:34 am</span>
-                            </div>
-
-                            <div class="description">i am capable of achieving greatness every challenge is an
-                                opportunity for growth iam worthy of love respect...</div>
-                            <div class="image">
-                                <div class="wrapper"></div>
-                            </div>
-                        </div>
-                        <div class="box">
-
-                            <div class="date">
-                                <p>Dec 20, 2024 - Mon</p>
-                                <span>9:34 am</span>
-                            </div>
-
-                            <div class="description">i am capable of achieving greatness every challenge is an
-                                opportunity for growth iam worthy of love respect...</div>
-                            <div class="image">
-                                <div class="wrapper"></div>
-                            </div>
-                        </div>
-                        <div class="box">
-
-                            <div class="date">
-                                <p>Dec 20, 2024 - Mon</p>
-                                <span>9:34 am</span>
-                            </div>
-
-                            <div class="description">i am capable of achieving greatness every challenge is an
-                                opportunity for growth iam worthy of love respect...</div>
-                            <div class="image">
-                                <div class="wrapper"></div>
-                            </div>
-                        </div>
-                        <div class="box">
-
-                            <div class="date">
-                                <p>Dec 20, 2024 - Mon</p>
-                                <span>9:34 am</span>
-                            </div>
-
-                            <div class="description">i am capable of achieving greatness every challenge is an
-                                opportunity for growth iam worthy of love respect...</div>
-                            <div class="image">
-                                <div class="wrapper"></div>
+                                <div class="wrapper">
+                                    <img [src]="item.image" [alt]="item.title">
+                                </div>
                             </div>
                         </div>
 
                     </div>
-
                 </div>
             </div>
         </div>
@@ -342,20 +223,20 @@
 
                     <div class="container-item">
 
-                        <div class="box">
+                        <div class="box" *ngFor="let item of allInspiration; let i = index">
 
                             <div class="date">
-                                <p>Dec 20, 2024 - Mon</p>
-                                <span>9:34 am</span>
+                                <p>{{item.month}} {{item.dayOfMonth}}, {{item.year}} - {{item.dayOfWeek}}</p>
+                                <span>{{item.hours}}:{{item.minutes}} {{item.amPm}}</span>
                             </div>
 
-                            <div class="description">I am capable of achieving greatness every challenge is an
-                                opportunity for growth iam worthy of love respect...</div>
+                            <div class="description2">{{item.description}}</div>
                             <div class="image">
                                 <div class="wrapper"></div>
                             </div>
                         </div>
-                        <div class="box b2">
+
+                        <!-- <div class="box b2">
 
                             <div class="date">
                                 <p>Dec 20, 2024 - Mon</p>
@@ -386,7 +267,7 @@
                             <div class="image">
                                 <div class="wrapper"></div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
 
                 </div>
@@ -402,7 +283,7 @@
 }
 
 @if(isMomentFormOpen) {
-    <FormMoment (handleClose)="handleFormMoment()" (handleSubmit)="handleSubmitMd($event)"></FormMoment>
+    <FormMoment (handleClose)="handleFormMoment()" (handleSubmit)="handleSubmitMoment($event)"></FormMoment>
 }
 
 @if(isAchievementFormOpen) {

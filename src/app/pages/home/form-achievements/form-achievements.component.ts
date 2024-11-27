@@ -38,6 +38,8 @@ export class FormAchievementsComponent {
               id: Date.now(),
               title: this.title,
               image: this.imagePreview,
+              description: this.description,
+              date: new Date()
           };
           this.handleSubmit.emit(newItem)
           alert('Item added successfully!');

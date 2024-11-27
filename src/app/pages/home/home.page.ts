@@ -27,6 +27,11 @@ export class HomePage implements OnInit {
     allMoment: any = []
     allAchievements: any = []
     allInspiration: any = []
+    momentsToday: any = [];
+    groupedMomentsArray: any = [];
+    monthToday: Date = new Date();
+    month = this.monthToday.toLocaleString('default', { month: 'long' });
+    year = this.monthToday.getFullYear();
 
     constructor(private ApiService: RestApiService) {
         addIcons({ add });
@@ -36,6 +41,7 @@ export class HomePage implements OnInit {
         this.getMd();
         this.getMoment();
         this.getAchievements();
+        this.getInspiration();
     }
 
     /* md */
@@ -58,17 +64,71 @@ export class HomePage implements OnInit {
 
     /* momment */
     getMoment() {
-        this.allMoment = this.ApiService.getAll('Moment');
+        const allMoments = this.ApiService.getAll('Moment');
+        if (!allMoments) return;
+
+        let _momentsToday = allMoments.filter(d => this.isToday(new Date(d.date)));
+
+        this.momentsToday = _momentsToday.map(item => {
+            const { dayOfWeek, dayOfMonth, hours, minutes, amPm } = this.formatDate(new Date(item.date));
+
+            return {
+                ...item,
+                dayOfWeek,
+                dayOfMonth,
+                hours,
+                minutes,
+                amPm
+            }
+        })
+
+        this.allMoment = allMoments.map(item => {
+            const { dayOfWeek, dayOfMonth, month, year, hours, minutes, amPm } = this.formatDate(new Date(item.date));
+
+            return {
+                ...item,
+                dayOfWeek,
+                dayOfMonth,
+                month: this.getMonthName(month),
+                year,
+                hours,
+                minutes,
+                amPm
+            };
+        });
+
+        this.groupMomentsByDate();
+
         console.log(this.allMoment);
+
+    }
+
+    groupMomentsByDate() {
+        const groupedMoments = this.allMoment.reduce((groups: any, item: any) => {
+            const dateKey = `${item.dayOfMonth}-${item.month}-${item.year}`;
+
+            if (!groups[dateKey]) {
+                groups[dateKey] = {
+                    key: dateKey,
+                    month: item.month,
+                    year: item.year,
+                    moments: [],
+                };
+            }
+
+            groups[dateKey].moments.push(item);
+
+            return groups;
+        }, {});
+
+        this.groupedMomentsArray = Object.values(groupedMoments);
     }
 
     handleFormMoment() {
-        console.log("hey");
         this.isMomentFormOpen = !this.isMomentFormOpen;
     }
 
     handleSubmitMoment(event: Event) {
-        console.log(event);
         this.ApiService.create(event, "Moment");
         this.isMomentFormOpen = false;
         this.getMoment();
@@ -76,8 +136,23 @@ export class HomePage implements OnInit {
 
     /* achivements */
     getAchievements() {
-        this.allAchievements = this.ApiService.getAll('Achievements');
+        const _allAchievements = this.ApiService.getAll('Achievements');
+        this.allAchievements = _allAchievements.map((item: any) => {
+            const { dayOfWeek, dayOfMonth, month, year, hours, minutes, amPm } = this.formatDate(new Date(item.date));
+
+            return {
+                ...item,
+                dayOfWeek,
+                dayOfMonth,
+                hours,
+                minutes,
+                amPm,
+                month: this.getMonthName(month),
+                year
+            }
+        })
         console.log(this.allAchievements);
+
     }
 
     handleFormAchievements() {
@@ -93,7 +168,22 @@ export class HomePage implements OnInit {
 
     /* Inspirations */
     getInspiration() {
-        this.allInspiration = this.ApiService.getAll('Inspiration');
+        const __allInspiration = this.ApiService.getAll('Inspiration');
+
+        this.allInspiration = __allInspiration.map((item: any) => {
+            const { dayOfWeek, dayOfMonth, month, year, hours, minutes, amPm } = this.formatDate(new Date(item.date));
+
+            return {
+                ...item,
+                dayOfWeek,
+                dayOfMonth,
+                hours,
+                minutes,
+                amPm,
+                month: this.getMonthName(month),
+                year
+            }
+        })
         console.log(this.allInspiration);
     }
 
@@ -107,4 +197,36 @@ export class HomePage implements OnInit {
         this.isInspirationFormOpen = false;
         this.getInspiration();
     }
+
+    isToday(date: Date) {
+        const currentDate = new Date()
+
+        return date.getFullYear() === currentDate.getFullYear() &&
+            date.getMonth() === currentDate.getMonth() &&
+            date.getDate() === currentDate.getDate()
+    }
+
+    formatDate(date: Date) {
+        const days = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
+        const dayOfWeek = days[date.getDay()];
+        const dayOfMonth = date.getDate();
+
+        let hours = date.getHours();
+        const minutes = date.getMinutes().toString().padStart(2, '0');
+        const amPm = hours >= 12 ? 'PM' : 'AM';
+        hours = hours % 12 || 12;
+        const month = date.getMonth() + 1;
+        const year = date.getFullYear();
+
+        return { dayOfWeek, dayOfMonth, month, year, hours, minutes, amPm };
+    }
+
+    getMonthName(month: number): string {
+        const monthNames = [
+            'January', 'February', 'March', 'April', 'May', 'June',
+            'July', 'August', 'September', 'October', 'November', 'December'
+        ];
+        return monthNames[month - 1];
+    }
+
 }
