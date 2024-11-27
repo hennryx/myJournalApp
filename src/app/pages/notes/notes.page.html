@@ -1,0 +1,142 @@
+<ion-header [translucent]="true">
+    <ion-toolbar>
+        <ion-title>notes</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+    <ion-header collapse="condense">
+        <ion-toolbar>
+            <ion-title size="large">notes</ion-title>
+        </ion-toolbar>
+    </ion-header>
+
+    <div class="p-4 bg-white rounded-lg shadow-lg">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-semibold text-black">
+                {{ currentDate | date: 'MMMM dd yyyy' }}
+            </h2>
+            <div class="flex gap-2">
+                <button (click)="previousMonth()"
+                    class="p-2 text-black hover:text-gray-900 hover:bg-gray-100 rounded-lg">
+                    <ion-icon name="chevron-back-outline text-black"></ion-icon>
+                </button>
+                <button (click)="nextMonth()"
+                    class="p-2 text-black hover:text-gray-900 hover:bg-gray-100 rounded-lg">
+                    <ion-icon name="chevron-forward-outline text-black"></ion-icon>
+                </button>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-7 gap-0">
+            <div *ngFor="let day of ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']"
+                class="p-2 text-center text-sm font-semibold text-black col-span-1">
+                {{ day }}
+            </div>
+
+            <div *ngFor="let date of calendarDays" (click)="handleDateClick(date)"
+                [class.bg-white]="isSameMonth(date, currentDate)" [class.bg-gray-50]="!isSameMonth(date, currentDate)"
+                [class.border-green-500]="isToday(date)" [class.border-gray-200]="!isToday(date)"
+                class="min-h-24 p-2 border hover:bg-gray-50 cursor-pointer transition-colors duration-200">
+                <div class="text-sm font-semibold mb-1"
+                    [ngClass]="isSameMonth(date, currentDate) ? 'text-gray-900' : 'text-gray-400'">
+                    {{ date | date: 'd' }}
+                </div>
+
+                <div *ngIf="getEventsForDate(date).length > 0" class="space-y-1">
+                    <div *ngFor="let event of getEventsForDate(date)">
+                        <div [ngClass]="getEventTextColor(event.date)" class="text-xs">
+                            {{ event.title }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="isModalOpen" class="fixed inset-0 bg-white bg-opacity-50 flex items-center justify-center z-50">
+        <div class="bg-white rounded-lg w-full max-w-md mx-4 max-h-[90vh] overflow-hidden">
+            <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-lg font-semibold">
+                    Events for {{ selectedDate | date: 'MMMM d, yyyy' }}
+                </h3>
+                <button (click)="closeModal()" class="text-gray-500 hover:text-gray-700">×</button>
+            </div>
+
+            <div class="p-4 overflow-y-auto max-h-[60vh]">
+                <div class="space-y-2">
+                    <div *ngIf="selectedDate">
+                        <div *ngFor="let event of getEventsForDate(selectedDate)">
+                            <div class="p-3 rounded-lg border shadow-sm" [ngClass]="getEventTextColor(event.date)">
+                                <div class="font-semibold">{{ event.title }}</div>
+                                <div class="text-sm">{{ event.date | date: 'h:mm a' }}</div>
+                                <div *ngIf="event.description" class="text-sm mt-1 text-gray-600">{{ event.description
+                                    }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div *ngIf="isModalAddOpen" class="fixed inset-0 bg-white bg-opacity-50 flex items-center justify-center z-50 h-full w-full">
+        <div class="bg-white rounded-lg h-full w-full max-w-md mx-4 max-h-full overflow-y-scroll mt-28">
+            <div class="p-4 border-b border-gray-200 flex justify-between items-center">
+                <h3 class="text-lg font-semibold">
+                    {{ isAddEventForm ? 'Add New Event' : 'Events for ' + (selectedDate | date: 'MMMM d, yyyy') }}
+                </h3>
+                <button (click)="closeAddModal()" class="text-gray-500 hover:text-gray-700">×</button>
+            </div>
+
+            <div *ngIf="isAddEventForm" class="p-4 space-y-4">
+                <form (ngSubmit)="addEvent()" #eventForm="ngForm">
+                    <div class="mb-4">
+                        <label for="eventTitle" class="block text-sm font-medium text-black bg-white">Event
+                            Title</label>
+                        <input type="text" id="eventTitle" name="title" [(ngModel)]="newEvent.title"
+                            class="mt-1 block w-full px-3 py-2 border bg-transparent text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="eventDate" class="block text-sm font-medium text-gray-700">Event Date and
+                            Time</label>
+                        <input type="datetime-local" id="eventDate" name="date" [(ngModel)]="newEvent.date"
+                            class="mt-1 block w-full px-3 py-2 border bg-transparent text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            required>
+                    </div>
+                    <div class="mb-4">
+                        <label for="eventDescription"
+                            class="block text-sm font-medium text-gray-700">Description</label>
+                        <textarea id="eventDescription" name="description" [(ngModel)]="newEvent.description"
+                            class="mt-1 block w-full px-3 py-2 border bg-transparent text-black border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                            rows="3"></textarea>
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="submit" [disabled]="!eventForm.valid"
+                            class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
+                            Save Event
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div *ngIf="!isAddEventForm" class="p-4 overflow-y-auto max-h-[60vh]">
+                <div *ngFor="let event of getEventsForDate(selectedDate)">
+                    <div class="p-3 rounded-lg border shadow-sm" [ngClass]="getEventTextColor(event.date)">
+                        <div class="font-semibold">{{ event.title }}</div>
+                        <div class="text-sm">{{ event.date | date: 'h:mm a' }}</div>
+                        <div *ngIf="event.description" class="text-sm mt-1 text-gray-600">{{ event.description }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <ion-fab vertical="bottom" horizontal="end" slot="fixed" class="custom-fab">
+        <ion-fab-button (click)="openAddEventModal()" class="custom-fab-button">
+            <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+</ion-content>

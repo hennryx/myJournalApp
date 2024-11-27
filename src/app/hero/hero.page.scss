@@ -1,0 +1,138 @@
+@font-face {
+  font-family: 'MyCustomFont';
+  src: url('image-assets/fonts-assets/PPRightGothic-CompactBlack.otf') format('truetype'); 
+  font-weight: normal; 
+  font-style: normal; 
+
+
+
+}
+.welcome-container {
+  text-align: center;
+font-family: "PP Right Gothic";
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: relative;
+  background-color: #F2E2A9;
+
+h2 {
+  padding: 24px;
+line-height: 38px;
+  color: #681F20; /* Light olive green color for heading text */
+  font-size: 38px;
+  font-weight: bold;
+ 
+  
+}
+
+.image{
+   transform: scale(1.15);
+  justify-self: center;
+z-index: 1;
+width:280px;
+
+
+  height:50%;
+ background-repeat: no-repeat !important; /* Prevent the image from repeating */
+  background-position:center; /* Center the image */
+  background-size:cover;
+
+
+     background: url(image-assets/big-icon.svg);
+  
+}
+    .vector{
+  z-index: 3;
+   width: 34px;
+   height: 34px;
+   background-position: center;
+   background-size: contain;
+   background-repeat: no-repeat;
+   background: url(image-assets/Vector.svg);
+  animation: rotate-infinite 3s linear infinite; /* Infinite rotation animation */
+}
+
+/* Keyframes for 360-degree rotation */
+@keyframes rotate-infinite {
+  0% {
+    transform: rotate(0deg); /* Starting position */
+  }
+  100% {
+    transform: rotate(360deg); /* Full rotation */
+  }
+}
+p {
+  width: 70%;
+  color: #681F20; /* Light olive green color for paragraph text */
+  font-size: 14px;
+}
+
+
+
+
+.get-started-btn {
+   
+ margin-bottom: 12%;
+ background: #EFABAB; /* Red color for the button */
+ width: 85%;
+  border: 1.5px solid #681F20;
+  color: #681F20; /* White text color on button */
+  /* Remove default border */
+  padding: 14px 25px; /* Adjust padding for a bigger button */
+  font-size: 18px; /* Adjust font size */
+  border-radius: 100px; /* Rounded corners */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  /* Smooth transition for hover effect */
+  box-shadow: 0px 10px 0px 0px #681F20;
+}
+
+/* Get Started button hover effect */
+.get-started-btn:hover {
+  box-shadow: 0px 8px 0px 0px #681F20;
+    top:2px;
+  position: relative;
+  background: #f19d9d;
+  border: 1.5px solid #514A32;/* Lighter red/orange when hovered */
+}
+
+/* Get Started button focus effect */
+.get-started-btn:focus {
+
+   box-shadow: none;
+  top: 11px;
+  position: relative;
+  background-color: #e98080; /* Keep red color when focused */
+}
+
+/* Get Started button disabled effect */
+.get-started-btn:disabled {
+  background-color: #E7CCCC; /* Light pinkish color for disabled state */
+  color: #EDE8DC; /* Light cream for disabled text */
+  cursor: not-allowed; /* Change cursor to not-allowed when disabled */
+}
+
+}
+ 
+ 
+ 
+  .noise{
+  position: absolute;
+  pointer-events: none;
+  width: 100%;
+ background: red;
+  height: 100%;
+  opacity: .7;
+ background: url(image-assets/Noise.svg);
+
+mix-blend-mode: exclusion;
+  z-index: 2;
+  }
+
+  
+
+
+
