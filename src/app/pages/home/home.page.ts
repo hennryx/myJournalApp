@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonFab, IonFabButton, IonIcon, IonTabButton, IonAlert, IonPopover, IonButton } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonFab, IonFabButton, IonIcon, IonAlert, IonPopover, IonButton } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
 import { add, pencilOutline, trashOutline } from 'ionicons/icons';
@@ -21,6 +21,7 @@ import { ToastController } from '@ionic/angular';
     imports: [IonButton, IonPopover, IonAlert, IonIcon, IonFabButton, IonFab, IonContent, IonHeader, CommonModule, FormsModule, FormComponent, FormMomentComponent, FormAchievementsComponent, FormInspirationComponent, ViewMdComponent]
 })
 export class HomePage implements OnInit {
+    daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     isMdFormOpen: boolean = false;
     isMomentFormOpen: boolean = false;
     isAchievementFormOpen: boolean = false;
@@ -88,18 +89,32 @@ export class HomePage implements OnInit {
         this.selectedDay = null;
     }
 
-    saveMood(emoji: string): void {
+    saveMood(emoji: string, day: string): void {
         const moodEvent = {
-            day: this.selectedDay,
+            id: Date.now(),
+            day: day,
             mood: emoji,
             date: new Date().toISOString()
         };
+        
+        const existingMood = this.allMoods.find((item: any) => item.day === day);
+        if (existingMood) {
+            const updatedMood = {
+                ...existingMood,
+                mood: emoji, 
+                date: new Date().toISOString() 
+            };
+            
+            this.ApiService.update(existingMood?.id, updatedMood, 'myMoods');
+            this.toastHandler("Moods Updated Successfully")
+        } else {
+            this.ApiService.create(moodEvent, 'myMoods');
+            this.toastHandler("Moods Successfully added")
+        }
 
-        this.ApiService.create(moodEvent, 'myMoods')
         this.selectedDay = "";
         this.closePopup();
         this.getMoods();
-        this.toastHandler("Moods Successfully added")
     }
 
     getMoods() {

@@ -50,52 +50,52 @@
                     <p>Third Week of Nov 22, 2024</p>
                 </div>
                 <div class="row-md-2">
+
                     <div class="container">
-
-                        <div class="col-container-mood">
+                        <div class="col-container-mood" *ngFor="let day of daysOfWeek">
                             <div class="ellipse-one">
                                 <div class="ellipse-two flex items-center justify-center">
-                                    <ion-button id="monday" class="h-full w-full mood" (click)="openPopup('Monday')">
+                                    <ion-button [id]="day" class="h-full w-full mood" (click)="openPopup(day)"
+                                        #moodButton>
                                         <div *ngFor="let item of allMoods; let i = index">
-                                            <span *ngIf="item.day === 'Monday'">
+                                            <span *ngIf="item.day === day">
                                                 {{item.mood}}
                                             </span>
                                         </div>
-                                        <ion-icon *ngIf="!hasMood('Monday')" name="add"></ion-icon>
+                                        <ion-icon *ngIf="!hasMood(day)" name="add"></ion-icon>
                                     </ion-button>
                                 </div>
                             </div>
-                            <p>Monday</p>
+                            <p>{{day}}</p>
 
-                            <ion-popover trigger="monday" side="top" alignment="center">
+                            <ion-popover [trigger]="day" side="top" alignment="center" [dismissOnSelect]="true">
                                 <ng-template>
-                                    <!-- palitan yung emoji ng src ng image full src para yun and ma access -->
                                     <ion-content class="ion-padding flex flex-row emoji">
-                                        <span (click)="saveMood('😊')" class="flex flex-col gap-1">
+                                        <span (click)="saveMood('😊', day)" class="flex flex-col gap-1">
                                             <span>😊</span>
                                             <p class="text-xs">Happy</p>
                                         </span>
-                                        <span (click)="saveMood('😢')" class="flex flex-col gap-1">
+                                        <span (click)="saveMood('😢', day)" class="flex flex-col gap-1">
                                             <span>😢</span>
                                             <p class="text-xs">Sad</p>
                                         </span>
-                                        <span (click)="saveMood('😡')" class="flex flex-col gap-1">
+                                        <span (click)="saveMood('😡', day)" class="flex flex-col gap-1">
                                             <span>😡</span>
                                             <p class="text-xs">Angry</p>
                                         </span>
-                                        <span (click)="saveMood('😔')" class="flex flex-col gap-1">
+                                        <span (click)="saveMood('😔', day)" class="flex flex-col gap-1">
                                             <span>😔</span>
                                             <p class="text-xs">Lonely</p>
                                         </span>
-                                        <span (click)="saveMood('😴')" class="flex flex-col gap-1">
+                                        <span (click)="saveMood('😴', day)" class="flex flex-col gap-1">
                                             <span>😴</span>
                                             <p class="text-xs">Tired</p>
                                         </span>
-                                        <span (click)="saveMood('😃')" class="flex flex-col gap-1">
+                                        <span (click)="saveMood('😃', day)" class="flex flex-col gap-1">
                                             <span>😃</span>
                                             <p class="text-xs">Excited</p>
                                         </span>
-                                        <span (click)="saveMood('😨')" class="flex flex-col gap-1">
+                                        <span (click)="saveMood('😨', day)" class="flex flex-col gap-1">
                                             <span>😨</span>
                                             <p class="text-xs">Afraid</p>
                                         </span>
@@ -103,322 +103,6 @@
                                 </ng-template>
                             </ion-popover>
                         </div>
-
-                        <div class="col-container-mood">
-                            <div class="ellipse-one">
-                                <div class="ellipse-two flex items-center justify-center">
-                                    <ion-button id="Tuesday" class="h-full w-full mood" (click)="openPopup('Tuesday')">
-                                        <div *ngFor="let item of allMoods; let i = index">
-                                            <span *ngIf="item.day === 'Tuesday'">
-                                                {{item.mood}}
-                                            </span>
-                                        </div>
-                                        <ion-icon *ngIf="!hasMood('Tuesday')" name="add"></ion-icon>
-                                    </ion-button>
-                                </div>
-                            </div>
-                            <p>Tuesday</p>
-
-                            <ion-popover trigger="Tuesday" side="top" alignment="center">
-                                <ng-template>
-                                    <!-- palitan yung emoji ng src ng image full src para yun and ma access -->
-                                    <ion-content class="ion-padding flex flex-row emoji">
-                                        <span (click)="saveMood('😊')" class="flex flex-col gap-1">
-                                            <span>😊</span>
-                                            <p class="text-xs">Happy</p>
-                                        </span>
-                                        <span (click)="saveMood('😢')" class="flex flex-col gap-1">
-                                            <span>😢</span>
-                                            <p class="text-xs">Sad</p>
-                                        </span>
-                                        <span (click)="saveMood('😡')" class="flex flex-col gap-1">
-                                            <span>😡</span>
-                                            <p class="text-xs">Angry</p>
-                                        </span>
-                                        <span (click)="saveMood('😔')" class="flex flex-col gap-1">
-                                            <span>😔</span>
-                                            <p class="text-xs">Lonely</p>
-                                        </span>
-                                        <span (click)="saveMood('😴')" class="flex flex-col gap-1">
-                                            <span>😴</span>
-                                            <p class="text-xs">Tired</p>
-                                        </span>
-                                        <span (click)="saveMood('😃')" class="flex flex-col gap-1">
-                                            <span>😃</span>
-                                            <p class="text-xs">Excited</p>
-                                        </span>
-                                        <span (click)="saveMood('😨')" class="flex flex-col gap-1">
-                                            <span>😨</span>
-                                            <p class="text-xs">Afraid</p>
-                                        </span>
-                                    </ion-content>
-                                </ng-template>
-                            </ion-popover>
-                        </div>
-
-                        <div class="col-container-mood">
-                            <div class="ellipse-one">
-                                <div class="ellipse-two flex items-center justify-center">
-                                    <ion-button id="Wednesday" class="h-full w-full mood"
-                                        (click)="openPopup('Wednesday')">
-                                        <div *ngFor="let item of allMoods; let i = index">
-                                            <span *ngIf="item.day === 'Wednesday'">
-                                                {{item.mood}}
-                                            </span>
-                                        </div>
-                                        <ion-icon *ngIf="!hasMood('Wednesday')" name="add"></ion-icon>
-                                    </ion-button>
-                                </div>
-                            </div>
-                            <p>Wednesday</p>
-
-                            <ion-popover trigger="Wednesday" side="top" alignment="center">
-                                <ng-template>
-                                    <!-- palitan yung emoji ng src ng image full src para yun and ma access -->
-                                    <ion-content class="ion-padding flex flex-row emoji">
-                                        <span (click)="saveMood('😊')" class="flex flex-col gap-1">
-                                            <span>😊</span>
-                                            <p class="text-xs">Happy</p>
-                                        </span>
-                                        <span (click)="saveMood('😢')" class="flex flex-col gap-1">
-                                            <span>😢</span>
-                                            <p class="text-xs">Sad</p>
-                                        </span>
-                                        <span (click)="saveMood('😡')" class="flex flex-col gap-1">
-                                            <span>😡</span>
-                                            <p class="text-xs">Angry</p>
-                                        </span>
-                                        <span (click)="saveMood('😔')" class="flex flex-col gap-1">
-                                            <span>😔</span>
-                                            <p class="text-xs">Lonely</p>
-                                        </span>
-                                        <span (click)="saveMood('😴')" class="flex flex-col gap-1">
-                                            <span>😴</span>
-                                            <p class="text-xs">Tired</p>
-                                        </span>
-                                        <span (click)="saveMood('😃')" class="flex flex-col gap-1">
-                                            <span>😃</span>
-                                            <p class="text-xs">Excited</p>
-                                        </span>
-                                        <span (click)="saveMood('😨')" class="flex flex-col gap-1">
-                                            <span>😨</span>
-                                            <p class="text-xs">Afraid</p>
-                                        </span>
-                                    </ion-content>
-                                </ng-template>
-                            </ion-popover>
-                        </div>
-
-                        <div class="col-container-mood">
-                            <div class="ellipse-one">
-                                <div class="ellipse-two flex items-center justify-center">
-                                    <ion-button id="Thursday" class="h-full w-full mood"
-                                        (click)="openPopup('Thursday')">
-                                        <div *ngFor="let item of allMoods; let i = index">
-                                            <span *ngIf="item.day === 'Thursday'">
-                                                {{item.mood}}
-                                            </span>
-                                        </div>
-                                        <ion-icon *ngIf="!hasMood('Thursday')" name="add"></ion-icon>
-                                    </ion-button>
-                                </div>
-                            </div>
-                            <p>Thursday</p>
-
-                            <ion-popover trigger="Thursday" side="top" alignment="center">
-                                <ng-template>
-                                    <!-- palitan yung emoji ng src ng image full src para yun and ma access -->
-                                    <ion-content class="ion-padding flex flex-row emoji">
-                                        <span (click)="saveMood('😊')" class="flex flex-col gap-1">
-                                            <span>😊</span>
-                                            <p class="text-xs">Happy</p>
-                                        </span>
-                                        <span (click)="saveMood('😢')" class="flex flex-col gap-1">
-                                            <span>😢</span>
-                                            <p class="text-xs">Sad</p>
-                                        </span>
-                                        <span (click)="saveMood('😡')" class="flex flex-col gap-1">
-                                            <span>😡</span>
-                                            <p class="text-xs">Angry</p>
-                                        </span>
-                                        <span (click)="saveMood('😔')" class="flex flex-col gap-1">
-                                            <span>😔</span>
-                                            <p class="text-xs">Lonely</p>
-                                        </span>
-                                        <span (click)="saveMood('😴')" class="flex flex-col gap-1">
-                                            <span>😴</span>
-                                            <p class="text-xs">Tired</p>
-                                        </span>
-                                        <span (click)="saveMood('😃')" class="flex flex-col gap-1">
-                                            <span>😃</span>
-                                            <p class="text-xs">Excited</p>
-                                        </span>
-                                        <span (click)="saveMood('😨')" class="flex flex-col gap-1">
-                                            <span>😨</span>
-                                            <p class="text-xs">Afraid</p>
-                                        </span>
-                                    </ion-content>
-                                </ng-template>
-                            </ion-popover>
-                        </div>
-
-                        <div class="col-container-mood">
-                            <div class="ellipse-one">
-                                <div class="ellipse-two flex items-center justify-center">
-                                    <ion-button id="Friday" class="h-full w-full mood" (click)="openPopup('Friday')">
-                                        <div *ngFor="let item of allMoods; let i = index">
-                                            <span *ngIf="item.day === 'Friday'">
-                                                {{item.mood}}
-                                            </span>
-                                        </div>
-                                        <ion-icon *ngIf="!hasMood('Friday')" name="add"></ion-icon>
-                                    </ion-button>
-                                </div>
-                            </div>
-                            <p>Friday</p>
-
-                            <ion-popover trigger="Friday" side="top" alignment="center">
-                                <ng-template>
-                                    <!-- palitan yung emoji ng src ng image full src para yun and ma access -->
-                                    <ion-content class="ion-padding flex flex-row emoji">
-                                        <span (click)="saveMood('😊')" class="flex flex-col gap-1">
-                                            <span>😊</span>
-                                            <p class="text-xs">Happy</p>
-                                        </span>
-                                        <span (click)="saveMood('😢')" class="flex flex-col gap-1">
-                                            <span>😢</span>
-                                            <p class="text-xs">Sad</p>
-                                        </span>
-                                        <span (click)="saveMood('😡')" class="flex flex-col gap-1">
-                                            <span>😡</span>
-                                            <p class="text-xs">Angry</p>
-                                        </span>
-                                        <span (click)="saveMood('😔')" class="flex flex-col gap-1">
-                                            <span>😔</span>
-                                            <p class="text-xs">Lonely</p>
-                                        </span>
-                                        <span (click)="saveMood('😴')" class="flex flex-col gap-1">
-                                            <span>😴</span>
-                                            <p class="text-xs">Tired</p>
-                                        </span>
-                                        <span (click)="saveMood('😃')" class="flex flex-col gap-1">
-                                            <span>😃</span>
-                                            <p class="text-xs">Excited</p>
-                                        </span>
-                                        <span (click)="saveMood('😨')" class="flex flex-col gap-1">
-                                            <span>😨</span>
-                                            <p class="text-xs">Afraid</p>
-                                        </span>
-                                    </ion-content>
-                                </ng-template>
-                            </ion-popover>
-                        </div>
-
-                        <div class="col-container-mood">
-                            <div class="ellipse-one">
-                                <div class="ellipse-two flex items-center justify-center">
-                                    <ion-button id="Saturday" class="h-full w-full mood"
-                                        (click)="openPopup('Saturday')">
-                                        <div *ngFor="let item of allMoods; let i = index">
-                                            <span *ngIf="item.day === 'Saturday'">
-                                                {{item.mood}}
-                                            </span>
-                                        </div>
-                                        <ion-icon *ngIf="!hasMood('Saturday')" name="add"></ion-icon>
-                                    </ion-button>
-                                </div>
-                            </div>
-                            <p>Saturday</p>
-
-                            <ion-popover trigger="Saturday" side="top" alignment="center">
-                                <ng-template>
-                                    <!-- palitan yung emoji ng src ng image full src para yun and ma access -->
-                                    <ion-content class="ion-padding flex flex-row emoji">
-                                        <span (click)="saveMood('😊')" class="flex flex-col gap-1">
-                                            <span>😊</span>
-                                            <p class="text-xs">Happy</p>
-                                        </span>
-                                        <span (click)="saveMood('😢')" class="flex flex-col gap-1">
-                                            <span>😢</span>
-                                            <p class="text-xs">Sad</p>
-                                        </span>
-                                        <span (click)="saveMood('😡')" class="flex flex-col gap-1">
-                                            <span>😡</span>
-                                            <p class="text-xs">Angry</p>
-                                        </span>
-                                        <span (click)="saveMood('😔')" class="flex flex-col gap-1">
-                                            <span>😔</span>
-                                            <p class="text-xs">Lonely</p>
-                                        </span>
-                                        <span (click)="saveMood('😴')" class="flex flex-col gap-1">
-                                            <span>😴</span>
-                                            <p class="text-xs">Tired</p>
-                                        </span>
-                                        <span (click)="saveMood('😃')" class="flex flex-col gap-1">
-                                            <span>😃</span>
-                                            <p class="text-xs">Excited</p>
-                                        </span>
-                                        <span (click)="saveMood('😨')" class="flex flex-col gap-1">
-                                            <span>😨</span>
-                                            <p class="text-xs">Afraid</p>
-                                        </span>
-                                    </ion-content>
-                                </ng-template>
-                            </ion-popover>
-                        </div>
-
-                        <div class="col-container-mood">
-                            <div class="ellipse-one">
-                                <div class="ellipse-two flex items-center justify-center">
-                                    <ion-button id="Sunday" class="h-full w-full mood" (click)="openPopup('Sunday')">
-                                        <div *ngFor="let item of allMoods; let i = index">
-                                            <span *ngIf="item.day === 'Sunday'">
-                                                {{item.mood}}
-                                            </span>
-                                        </div>
-                                        <ion-icon *ngIf="!hasMood('Sunday')" name="add"></ion-icon>
-                                    </ion-button>
-                                </div>
-                            </div>
-                            <p>Sunday</p>
-
-                            <ion-popover trigger="Sunday" side="top" alignment="center">
-                                <ng-template>
-                                    <!-- palitan yung emoji ng src ng image full src para yun and ma access -->
-                                    <ion-content class="ion-padding flex flex-row emoji">
-                                        <span (click)="saveMood('😊')" class="flex flex-col gap-1">
-                                            <span>😊</span>
-                                            <p class="text-xs">Happy</p>
-                                        </span>
-                                        <span (click)="saveMood('😢')" class="flex flex-col gap-1">
-                                            <span>😢</span>
-                                            <p class="text-xs">Sad</p>
-                                        </span>
-                                        <span (click)="saveMood('😡')" class="flex flex-col gap-1">
-                                            <span>😡</span>
-                                            <p class="text-xs">Angry</p>
-                                        </span>
-                                        <span (click)="saveMood('😔')" class="flex flex-col gap-1">
-                                            <span>😔</span>
-                                            <p class="text-xs">Lonely</p>
-                                        </span>
-                                        <span (click)="saveMood('😴')" class="flex flex-col gap-1">
-                                            <span>😴</span>
-                                            <p class="text-xs">Tired</p>
-                                        </span>
-                                        <span (click)="saveMood('😃')" class="flex flex-col gap-1">
-                                            <span>😃</span>
-                                            <p class="text-xs">Excited</p>
-                                        </span>
-                                        <span (click)="saveMood('😨')" class="flex flex-col gap-1">
-                                            <span>😨</span>
-                                            <p class="text-xs">Afraid</p>
-                                        </span>
-                                    </ion-content>
-                                </ng-template>
-                            </ion-popover>
-                        </div>
-
                     </div>
                 </div>
             </div>
