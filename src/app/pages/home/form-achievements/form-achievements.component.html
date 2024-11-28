@@ -11,14 +11,23 @@
       </div>
 
       <form (submit)="onSubmit($event)" class="space-y-4">
-          <div>
-              <label for="image" class="block text-sm font-medium text-gray-700">Image</label>
-              <input type="file" id="image"
-                  class="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer focus:outline-none"
-                  (change)="onImageSelect($event)" accept="image/*" />
-              <img *ngIf="imagePreview" [src]="imagePreview" alt="Preview"
-                  class="mt-4 w-32 h-32 object-cover rounded-md" />
-          </div>
+          
+        <div class="mb-4 h-4/5">
+
+            <div class="flex items-center space-x-4 right-0 top-0">
+                <button type="button" (click)="triggerFileInput()" class="text-gray-700 text-3xl flex justify-center flex-col items-start gap-4">
+                    <span class="text-sm">Select image</span>
+                    <ion-icon name="image-outline"></ion-icon>
+                </button>
+                <input #imageInput type="file" id="image" (change)="onImageSelect($event)" class="hidden"
+                    accept="image/*" />
+            </div>
+
+            <div *ngIf="imagePreview" class="mt-4 mb-4 w-full flex justify-center">
+                <img [src]="imagePreview" alt="Preview"
+                    class="object-cover rounded-md w-2/5 h-auto max-h-96 mb-4" />
+            </div>
+        </div>
 
           <div>
               <label for="title" class="block text-sm font-medium text-gray-700">Title</label>

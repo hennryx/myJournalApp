@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonFabButton, IonFab, IonIcon } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonTitle, IonToolbar, IonFabButton, IonFab, IonIcon, IonAlert } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
 import { add, arrowBackOutline, chevronBackOutline, chevronForwardOutline, closeOutline, pencilOutline, trashBinOutline, trashOutline } from 'ionicons/icons'
@@ -13,7 +13,7 @@ import { ToastController } from '@ionic/angular';
     templateUrl: './notes.page.html',
     styleUrls: ['./notes.page.scss'],
     standalone: true,
-    imports: [IonIcon, IonFab, IonFabButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+    imports: [IonAlert, IonIcon, IonFab, IonFabButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
 })
 export class NotesPage implements OnInit {
 
@@ -29,11 +29,13 @@ export class NotesPage implements OnInit {
     viewEventData: any = {}
     currentDate = new Date();
     selectedDate: Date | null = null;
-    isModalOpen = false;
-    isModalAddOpen = false;
-    isAddEventForm = false;
+    isModalOpen: boolean = false;
+    isModalAddOpen: boolean = false;
+    isAddEventForm: boolean = false;
+    isAlertOpen: boolean = false;
     formEvent = { title: '', date: '', description: '' };
     isEditMode = false;
+    toDeleteNote:any = {}
 
     events: any = [];
 
@@ -41,6 +43,23 @@ export class NotesPage implements OnInit {
     monthEnd = this.endOfMonth(this.currentDate);
 
     calendarDays = this.eachDayOfInterval(this.monthStart, this.monthEnd);
+
+    public alertButtons = [
+        {
+            text: 'Cancel',
+            role: 'cancel',
+            handler: () => {
+                console.log('Alert canceled');
+            },
+        },
+        {
+            text: 'OK',
+            role: 'confirm',
+            handler: () => {
+                console.log('Alert confirmed');
+            },
+        },
+    ];
 
     getEvents() {
         this.events = this.apiService.getAll('events');
@@ -111,6 +130,9 @@ export class NotesPage implements OnInit {
 
     closeModal() {
         this.isModalOpen = false;
+        this.isModalAddOpen = false;
+        this.isAddEventForm = false;
+        this.isEditMode = false;
     }
 
     // Modal for adding new event
@@ -118,9 +140,10 @@ export class NotesPage implements OnInit {
         this.selectedDate = new Date(); // Default to today's date
         this.formEvent = { title: '', date: '', description: '' };  // Reset the form fields
         this.isModalAddOpen = true;
-        this.isAddEventForm = true;  // Show add event form
+        this.isAddEventForm = true;
+
     }
-    
+
     handleFormSubmit() {
         if (this.isEditMode) {
             this.updateEvent(this.formEvent);
@@ -151,7 +174,8 @@ export class NotesPage implements OnInit {
 
     closeAddModal() {
         this.isModalAddOpen = false;
-        this.isAddEventForm = false;  // Reset the form flag
+        this.isAddEventForm = false;
+        this.isEditMode = false;
     }
 
     // Navigate between months
@@ -197,12 +221,12 @@ export class NotesPage implements OnInit {
 
     async updateEvent(event: any) {
         this.apiService.update(event.id, event, 'events')
-            this.getEvents(); 
-            this.closeModal();
-            this.openModalEvent();
-            this.isModalAddOpen = false;
-            this.isAddEventForm = false;
-            this.isEditMode = false;
+        this.getEvents();
+        this.closeModal();
+        this.openModalEvent();
+        this.isModalAddOpen = false;
+        this.isAddEventForm = false;
+        this.isEditMode = false;
 
         const toast = await this.toastController.create({
             icon: 'checkmark-circle-outline',
@@ -216,20 +240,28 @@ export class NotesPage implements OnInit {
     }
 
     async deleteEvent(event: any) {
-        this.apiService.delete(event.id, "events")
-        this.openModalEvent();
-        this.getEvents();
-        this.closeModal();
+        this.toDeleteNote = event;
+        this.isAlertOpen = true;
+    }
 
-        const toast = await this.toastController.create({
-            icon: 'checkmark-circle-outline',
-            message: 'event deleted successfully!',
-            cssClass: 'custom-toast',
-            duration: 5000,
-            position: "top",
-        });
+    async handleDeleteNotes(ev: any) {
+        if (ev.detail.role === "confirm") {
+            this.apiService.delete(this.toDeleteNote.id, "events")
+            this.openModalEvent();
+            this.getEvents();
+            this.closeModal();
 
-        toast.present();
+            const toast = await this.toastController.create({
+                icon: 'checkmark-circle-outline',
+                message: 'event deleted successfully!',
+                cssClass: 'custom-toast',
+                duration: 5000,
+                position: "top",
+            });
 
+            toast.present();
+        }
+        this.isAlertOpen = false;
+        this.toDeleteNote = {}
     }
 }

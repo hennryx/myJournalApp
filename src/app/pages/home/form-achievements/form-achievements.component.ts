@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonButton } from "@ionic/angular/standalone";
+import { IonButton, IonIcon } from "@ionic/angular/standalone";
 import { ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { checkmarkCircleOutline } from 'ionicons/icons';
+import { checkmarkCircleOutline, imageOutline } from 'ionicons/icons';
 
 @Component({
     selector: 'FormAchievements',
     templateUrl: './form-achievements.component.html',
     styleUrls: ['./form-achievements.component.scss'],
     standalone: true,
-    imports: [IonButton, CommonModule, FormsModule]
+    imports: [IonIcon, IonButton, CommonModule, FormsModule]
 })
 export class FormAchievementsComponent {
     @Output() handleClose = new EventEmitter<void>()
@@ -22,7 +22,12 @@ export class FormAchievementsComponent {
     description: string = "";
 
     constructor(private toastController: ToastController) {
-        addIcons({ checkmarkCircleOutline });
+        addIcons({ checkmarkCircleOutline, imageOutline });
+    }
+
+    triggerFileInput(): void {
+        const inputElement = document.getElementById('image') as HTMLInputElement;
+        inputElement.click();
     }
 
     onImageSelect(event: Event): void {

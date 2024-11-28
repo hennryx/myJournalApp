@@ -20,7 +20,7 @@ export class FormComponent {
     imagePreview: string | null = null;
     title: string = '';
     selectedCardIndex: number | null = null;
-    cards: string[] = ['Card 1', 'Card 2', 'Card 3']; // Card options
+    cards: string[] = ['morning meditation', 'evening meditation', 'new year resolution', 'Christmas wish']; 
 
     constructor(private toastController: ToastController) {
         addIcons({ checkmarkCircleOutline, imageOutline });
@@ -54,7 +54,7 @@ export class FormComponent {
                 id: Date.now(),
                 title: this.title,
                 image: this.imagePreview,
-                card: this.cards[this.selectedCardIndex],
+                /* card: this.cards[this.selectedCardIndex], */
                 date: new Date()
             };
             this.handleSubmit.emit(newItem);

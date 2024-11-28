@@ -1,6 +1,6 @@
-<ion-header [translucent]="true">
-    <ion-toolbar>
-        <ion-title>notes</ion-title>
+<ion-header [translucent]="true" >
+    <ion-toolbar >
+        <ion-title>Notes</ion-title>
     </ion-toolbar>
 </ion-header>
 
@@ -176,7 +176,7 @@
                     </div>
                     <div class="flex justify-end">
                         <button type="submit" [disabled]="!eventForm.valid"
-                            class="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">
+                            class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">
                             {{ isEditMode ? 'Update Event' : 'Save Event' }}
                         </button>
                     </div>
@@ -200,4 +200,10 @@
             <ion-icon name="add"></ion-icon>
         </ion-fab-button>
     </ion-fab>
+
+
+
+    <ion-alert [isOpen]="isAlertOpen" header="Are you sure you want to delete this?" [buttons]="alertButtons"
+        (didDismiss)="handleDeleteNotes($event)">
+    </ion-alert>
 </ion-content>

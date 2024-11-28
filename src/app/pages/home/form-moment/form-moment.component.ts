@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { IonButton } from "@ionic/angular/standalone";
+import { IonButton, IonIcon } from "@ionic/angular/standalone";
 import { ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { checkmarkCircleOutline } from 'ionicons/icons';
+import { checkmarkCircleOutline, imageOutline } from 'ionicons/icons';
 
 @Component({
     selector: 'FormMoment',
     templateUrl: './form-moment.component.html',
     styleUrls: ['./form-moment.component.scss'],
     standalone: true,
-    imports: [IonButton, FormsModule, CommonModule]
+    imports: [IonIcon, IonButton, FormsModule, CommonModule]
 })
 export class FormMomentComponent {
 
@@ -23,7 +23,12 @@ export class FormMomentComponent {
     description: string = "";
 
     constructor(private toastController: ToastController) {
-        addIcons({ checkmarkCircleOutline });
+        addIcons({ checkmarkCircleOutline, imageOutline });
+    }
+
+    triggerFileInput(): void {
+        const inputElement = document.getElementById('image') as HTMLInputElement;
+        inputElement.click();
     }
 
     onImageSelect(event: Event): void {

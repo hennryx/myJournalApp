@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonFab, IonFabButton, IonIcon, IonTabButton, IonAlert } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonFab, IonFabButton, IonIcon, IonTabButton, IonAlert, IonPopover, IonButton } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
 import { add, pencilOutline, trashOutline } from 'ionicons/icons';
@@ -18,7 +18,7 @@ import { ToastController } from '@ionic/angular';
     templateUrl: './home.page.html',
     styleUrls: ['./home.page.scss'],
     standalone: true,
-    imports: [IonAlert, IonIcon, IonFabButton, IonFab, IonContent, IonHeader, CommonModule, FormsModule, FormComponent, FormMomentComponent, FormAchievementsComponent, FormInspirationComponent, ViewMdComponent]
+    imports: [IonButton, IonPopover, IonAlert, IonIcon, IonFabButton, IonFab, IonContent, IonHeader, CommonModule, FormsModule, FormComponent, FormMomentComponent, FormAchievementsComponent, FormInspirationComponent, ViewMdComponent]
 })
 export class HomePage implements OnInit {
     isMdFormOpen: boolean = false;
@@ -28,6 +28,7 @@ export class HomePage implements OnInit {
     isOpenView: boolean = false;
     isAlertOpen: boolean = false;
 
+    allMoods: any = []
     allMd: any = []
     allMoment: any = []
     allAchievements: any = []
@@ -41,6 +42,9 @@ export class HomePage implements OnInit {
 
     month = this.monthToday.toLocaleString('default', { month: 'long' });
     year = this.monthToday.getFullYear();
+
+    isPopupOpen = false;
+    selectedDay: string | null = null;
 
     constructor(private ApiService: RestApiService, private toastController: ToastController) {
         addIcons({ add, trashOutline, pencilOutline });
@@ -70,6 +74,59 @@ export class HomePage implements OnInit {
         this.getMoment();
         this.getAchievements();
         this.getInspiration();
+        this.getMoods()
+    }
+
+    /* moods */
+    openPopup(day: string): void {
+        this.selectedDay = day;
+        this.isPopupOpen = true;
+    }
+
+    closePopup(): void {
+        this.isPopupOpen = false;
+        this.selectedDay = null;
+    }
+
+    saveMood(emoji: string): void {
+        const moodEvent = {
+            day: this.selectedDay,
+            mood: emoji,
+            date: new Date().toISOString()
+        };
+
+        this.ApiService.create(moodEvent, 'myMoods')
+        this.selectedDay = "";
+        this.closePopup();
+        this.getMoods();
+        this.toastHandler("Moods Successfully added")
+    }
+
+    getMoods() {
+        let _allMoods = this.ApiService.getAll('myMoods');
+        const currentDate = new Date();
+
+        _allMoods.forEach((mood: any) => {
+            const moodDate = new Date(mood.date);
+            const diffTime = Math.abs(currentDate.getTime() - moodDate.getTime());
+            const diffDays = Math.floor(diffTime / (1000 * 3600 * 24));
+            
+            if (diffDays > 7) {
+            this.ApiService.delete(mood.id, 'myMoods');
+            }
+        });
+
+        this.allMoods = _allMoods.filter(mood => {
+            const moodDate = new Date(mood.date);
+            const diffTime = Math.abs(currentDate.getTime() - moodDate.getTime());
+            const diffDays = Math.floor(diffTime / (1000 * 3600 * 24));
+            return diffDays <= 7;
+        });
+
+    }
+
+    hasMood(day: string): boolean {
+        return this.allMoods.some((item: any) => item.day === day);
     }
 
     /* md */
@@ -152,7 +209,16 @@ export class HomePage implements OnInit {
     }
 
     groupMomentsByDate() {
-        const groupedMoments = this.allMoment.reduce((groups: any, item: any) => {
+        const sortedMoments = this.allMoment.sort((a: any, b: any) => {
+            const dateA = new Date(a.date);
+            const dateB = new Date(b.date);
+            return dateB.getTime() - dateA.getTime();
+        });
+
+        console.log(sortedMoments);
+
+
+        const groupedMoments = sortedMoments.reduce((groups: any, item: any) => {
             const dateKey = `${item.dayOfMonth}-${item.month}-${item.year}`;
 
             if (!groups[dateKey]) {
@@ -168,8 +234,14 @@ export class HomePage implements OnInit {
 
             return groups;
         }, {});
+        console.log(groupedMoments);
 
-        this.groupedMomentsArray = Object.values(groupedMoments);
+
+        this.groupedMomentsArray = Object.values(groupedMoments).sort((a: any, b: any) => {
+            const dateA = new Date(a.date);
+            const dateB = new Date(b.date);
+            return dateB.getTime() - dateA.getTime();
+        });
     }
 
     handleFormMoment() {
@@ -258,14 +330,9 @@ export class HomePage implements OnInit {
             this.ApiService.delete(this.currentItemIdToDelete, "Inspiration");
             this.getInspiration();
             this.toastHandler("Inspiration Successfully deleted")
-            this.isAlertOpen = false;
-
         }
+        this.isAlertOpen = false;
     }
-    /* 
-        handleUpdateInspiration(id: any) {
-    
-        } */
 
     /* other functions */
     isToday(date: Date) {

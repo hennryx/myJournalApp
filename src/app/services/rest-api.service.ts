@@ -7,8 +7,15 @@ export class RestApiService {
 
   getAll(storageKey: string): any[] {
     const data = localStorage.getItem(storageKey);
-    return data ? JSON.parse(data) : [];
-  }
+    if (!data) return [];
+
+    return JSON.parse(data).sort((a: any, b: any) => {
+        const dateA = new Date(a?.date);
+        const dateB = new Date(b?.date);
+        return dateB.getTime() - dateA.getTime();
+    });
+}
+
 
   create(item: any, storageKey: string): void {
     const items = this.getAll(storageKey);

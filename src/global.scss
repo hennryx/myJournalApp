@@ -37,6 +37,8 @@
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 /* @import '@ionic/angular/css/palettes/dark.system.css'; */
 
+
+/* wag gagalawin tong mga css nato! */
 .custom-toast {
     --background: #dff9e4; 
     --color: #2ecc71;
@@ -65,4 +67,57 @@
     font-size: 100px;
     color: #721c24;
     margin-right: 8px;
+}
+
+
+.tab-button {
+  --color: gray; 
+  --background: transparent;
+}
+
+.tab-button.tab-selected {
+  color: white !important;
+}
+
+ion-tab-button.tab-selected ion-icon,
+ion-tab-button.tab-selected ion-label {
+  color: white !important;
+}
+
+ion-tab-button ion-icon,
+ion-tab-button ion-label {
+  color: gray; 
+}
+
+ion-header {
+  --background: #721c24; 
+}
+
+ion-toolbar {
+  --background: #721c24; 
+}
+
+ion-title {
+  color: white !important;
+}
+
+ion-button.mood {
+  --background: #5D3C3C;
+  --box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.3), 0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+  --color: gray;
+}
+
+ion-content.emoji {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  gap: 10px; 
+}
+
+ion-content.emoji span {
+  font-size: 24px; 
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px; 
 }

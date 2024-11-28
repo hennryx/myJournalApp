@@ -1,4 +1,4 @@
-<ion-tabs>
+<!-- <ion-tabs>
     <ion-tab-bar slot="bottom" class="bg-red-900">
         <ion-tab-button tab="home" routerLink="/tabs/home" class="bg-red-900">
             <ion-icon name="home"></ion-icon>
@@ -11,6 +11,23 @@
         <ion-tab-button tab="settings" routerLink="/tabs/settings" class="bg-red-900">
             <ion-icon name="settings"></ion-icon>
             <ion-label class="text-white">Settings</ion-label>
+        </ion-tab-button>
+    </ion-tab-bar>
+</ion-tabs> -->
+
+<ion-tabs>
+    <ion-tab-bar slot="bottom" class="bg-red-900">
+        <ion-tab-button tab="home" routerLink="/tabs/home" class="tab-button">
+            <ion-icon name="home"></ion-icon>
+            <ion-label>Home</ion-label>
+        </ion-tab-button>
+        <ion-tab-button tab="notes" routerLink="/tabs/notes" class="tab-button">
+            <ion-icon name="book-sharp"></ion-icon>
+            <ion-label>My notes</ion-label>
+        </ion-tab-button>
+        <ion-tab-button tab="settings" routerLink="/tabs/settings" class="tab-button">
+            <ion-icon name="settings"></ion-icon>
+            <ion-label>Settings</ion-label>
         </ion-tab-button>
     </ion-tab-bar>
 </ion-tabs>
