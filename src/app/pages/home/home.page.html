@@ -27,13 +27,15 @@
                 </div>
 
                 <div class="col-container" *ngFor="let item of allMd; let i = index">
-                    <div class="ellipse-one">
-                        <div class="ellipse-two">
-                            <div class="icon sun">
-                                <img [src]="item.image" [alt]="item.title">
+                    <button (click)="openView(item)">
+                        <div class="ellipse-one">
+                            <div class="ellipse-two">
+                                <div class="icon sun">
+                                    <img [src]="item.image" [alt]="item.title">
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </button>
                     <p>
                         {{item.title}}
                     </p>
@@ -148,11 +150,12 @@
         </div>
         <div class="row-four">
             <div *ngFor="let group of groupedMomentsArray" class="container-old-moment">
-                <div class="row-old-title flex justify-start items-center">
+                <div class="row-old-title flex justify-start items-center p-2">
                     <p>{{ group.month }} {{ group.year }}</p>
                 </div>
                 <div class="row-old-content">
-                    <div class="child-container border-t-2 border-b-2 border-gray-300" *ngFor="let item of group.moments">
+                    <div class="child-container border-t-2 border-b-2 border-gray-300"
+                        *ngFor="let item of group.moments">
                         <div class="box">
                             <p>{{ item.dayOfWeek }}</p>
                             <span>{{ item.dayOfMonth }}</span>
@@ -165,41 +168,37 @@
                 </div>
             </div>
         </div>
-        
 
-        <div class="row-five">
-            <div class="container-achivements">
 
-                <div class="title-button">
+        <div class="row-five flex flex-col gap-2 mt-5">
 
-                    <p>My Achivements</p>
-                    <div class="wrapper">
-                        <button (click)="handleFormAchievements()">
-                            <div class="icon"></div>
-                        </button>
+            <div class="title-button">
+
+                <p>My Achivements</p>
+                <div class="wrapper">
+                    <button (click)="handleFormAchievements()">
+                        <div class="icon"></div>
+                    </button>
+                </div>
+
+            </div>
+            <div class="container-content-5 flex flex-col h-full max-h-[65vh] overflow-y-auto p-2">
+
+                <div class="box-5" *ngFor="let item of allAchievements; let i = index">
+
+                    <div class="date">
+                        <p>{{item.month}} {{item.dayOfMonth}}, {{item.year}} - {{item.dayOfWeek}}</p>
+                        <span>{{item.hours}}:{{item.minutes}} {{item.amPm}}</span>
                     </div>
 
-                </div>
-                <div class="container-content">
-                    <div class="container-item">
-
-                        <div class="box" *ngFor="let item of allAchievements; let i = index">
-
-                            <div class="date">
-                                <p>{{item.month}} {{item.dayOfMonth}}, {{item.year}} - {{item.dayOfWeek}}</p>
-                                <span>{{item.hours}}:{{item.minutes}} {{item.amPm}}</span>
-                            </div>
-
-                            <div class="description">{{item.description}}</div>
-                            <div class="image">
-                                <div class="wrapper">
-                                    <img [src]="item.image" [alt]="item.title">
-                                </div>
-                            </div>
+                    <div class="description">{{item.description}}</div>
+                    <div class="image">
+                        <div class="wrapper">
+                            <img [src]="item.image" [alt]="item.title">
                         </div>
-
                     </div>
                 </div>
+
             </div>
         </div>
         <div class="row-six">
@@ -233,62 +232,48 @@
                             <div class="description2">{{item.description}}</div>
                             <div class="image">
                                 <div class="wrapper"></div>
+                                <div class="pr-2 flex flex-row gap-2">
+                                    <button (click)="showDeleteConfirmation(item.id)">
+                                        <ion-icon name="trash-outline" class="text-red-500"></ion-icon>
+                                    </button>
+<!-- 
+                                    <button (click)="handleUpdateInspiration(item.id)">
+                                        <ion-icon name="pencil-outline" class="text-blue-500"></ion-icon>
+                                    </button> -->
+                                </div>
                             </div>
                         </div>
-
-                        <!-- <div class="box b2">
-
-                            <div class="date">
-                                <p>Dec 20, 2024 - Mon</p>
-                                <span>9:34 am</span>
-                            </div>
-
-                            <div class="description">I am capable of achieving greatness every challenge is an
-                                opportunity for growth iam worthy of love
-                                every challenge is an opportunity for growth iam worthy of loveevery challenge is an
-                                opportunity for growth iam worthy of loveevery challenge is an opportunity for
-                                growth
-                                iam worthy of love respect...</div>
-                            <div class="image">
-                                <div class="wrapper"></div>
-                            </div>
-                        </div>
-
-
-                        <div class="box">
-
-                            <div class="date">
-                                <p>Dec 20, 2024 - Mon</p>
-                                <span>9:34 am</span>
-                            </div>
-
-                            <div class="description">I am capable of achieving greatness every challenge is an
-                                opportunity for growth iam worthy of love respect...</div>
-                            <div class="image">
-                                <div class="wrapper"></div>
-                            </div>
-                        </div> -->
                     </div>
 
                 </div>
             </div>
-
-
         </div>
     </div>
+
+
+    <ion-alert [isOpen]="isAlertOpen" header="Are you sure you want to delete this?" [buttons]="alertButtons"
+        (didDismiss)="handleDeleteInspiration($event)">
+    </ion-alert>
+
 </ion-content>
 
 @if(isMdFormOpen) {
-    <MdForm (handleClose)="handleFormMd()" (handleSubmit)="handleSubmitMd($event)"></MdForm>
+<MdForm (handleClose)="handleFormMd()" (handleSubmit)="handleSubmitMd($event)"></MdForm>
 }
 
 @if(isMomentFormOpen) {
-    <FormMoment (handleClose)="handleFormMoment()" (handleSubmit)="handleSubmitMoment($event)"></FormMoment>
+<FormMoment (handleClose)="handleFormMoment()" (handleSubmit)="handleSubmitMoment($event)"></FormMoment>
 }
 
 @if(isAchievementFormOpen) {
-    <FormAchievements (handleClose)="handleFormAchievements()" (handleSubmit)="handleSubmitAchievement($event)"></FormAchievements>
+<FormAchievements (handleClose)="handleFormAchievements()" (handleSubmit)="handleSubmitAchievement($event)">
+</FormAchievements>
 }
 @if(isInspirationFormOpen) {
-    <FormInspiration (handleClose)="handleFormInspiration()" (handleSubmit)="handleSubmitInspiration($event)"></FormInspiration>
+<FormInspiration (handleClose)="handleFormInspiration()" (handleSubmit)="handleSubmitInspiration($event)">
+</FormInspiration>
+}
+
+@if(isOpenView) {
+<ViewMd [data]="selectedMd" (handleClose)="handleCloseMd()" (handleDelete)="handleDelete($event)"></ViewMd>
 }

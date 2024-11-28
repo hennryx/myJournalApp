@@ -36,3 +36,33 @@
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
 /* @import '@ionic/angular/css/palettes/dark.system.css'; */
+
+.custom-toast {
+    --background: #dff9e4; 
+    --color: #2ecc71;
+    --padding-start: 16px;
+    --padding-end: 16px; 
+    --border-radius: 12px;
+    font-size: 16px;
+  }
+  
+  .custom-toast ion-icon {
+    font-size: 100px;
+    color: #2ecc71; 
+    margin-right: 8px;
+  }
+
+  .red-toast {
+    --background: #dff9e4; 
+    --color: #721c24; 
+    --padding-left: 16px;
+    --padding-right: 16px; 
+    --border-radius: 12px;
+    font-size: 16px;
+}
+
+.custom-toast ion-icon {
+    font-size: 100px;
+    color: #721c24;
+    margin-right: 8px;
+}

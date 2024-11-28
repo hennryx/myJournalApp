@@ -1,7 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonButton } from "@ionic/angular/standalone";
+import { ToastController } from '@ionic/angular';
+import { addIcons } from 'ionicons';
+import { checkmarkCircleOutline } from 'ionicons/icons';
 
 @Component({
     selector: 'FormMoment',
@@ -19,7 +22,9 @@ export class FormMomentComponent {
     title: string = '';
     description: string = "";
 
-    constructor() { }
+    constructor(private toastController: ToastController) {
+        addIcons({ checkmarkCircleOutline });
+    }
 
     onImageSelect(event: Event): void {
         const file = (event.target as HTMLInputElement).files?.[0];
@@ -32,7 +37,7 @@ export class FormMomentComponent {
         }
     }
 
-    onSubmit(event: Event): void {
+    async onSubmit(event: Event): Promise<void> {
         event.preventDefault();
         if (this.title && this.imagePreview) {
             const newItem = {
@@ -43,10 +48,25 @@ export class FormMomentComponent {
                 date: new Date()
             };
             this.handleSubmit.emit(newItem)
-            alert('Item added successfully!');
+
+            const toast = await this.toastController.create({
+                icon: 'checkmark-circle-outline',
+                message: 'Item added successfully!',
+                cssClass: 'custom-toast',
+                duration: 5000,
+                position: "top",
+            });
+
+            toast.present();
             this.resetForm();
         } else {
-            alert('Please fill in all fields.');
+            const toast = await this.toastController.create({
+                message: 'Please fill in all fields.',
+                duration: 1500,
+                position: "top",
+            });
+
+            await toast.present();
         }
     }
 

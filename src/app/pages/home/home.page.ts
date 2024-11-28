@@ -1,28 +1,33 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonFab, IonFabButton, IonIcon } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonFab, IonFabButton, IonIcon, IonTabButton, IonAlert } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
-import { add } from 'ionicons/icons';
+import { add, pencilOutline, trashOutline } from 'ionicons/icons';
 import { FormComponent } from "./form/form.component";
 import { RestApiService } from 'src/app/services/rest-api.service';
 import { FormMomentComponent } from "./form-moment/form-moment.component";
 import { FormAchievementsComponent } from "./form-achievements/form-achievements.component";
 import { FormInspirationComponent } from './form-inspiration/form-inspiration.component';
+import { ViewMdComponent } from "./view-md/view-md.component";
+import { ToastController } from '@ionic/angular';
 
 @Component({
     selector: 'app-home',
     templateUrl: './home.page.html',
     styleUrls: ['./home.page.scss'],
     standalone: true,
-    imports: [IonIcon, IonFabButton, IonFab, IonContent, IonHeader, CommonModule, FormsModule, FormComponent, FormMomentComponent, FormAchievementsComponent, FormInspirationComponent]
+    imports: [IonAlert, IonIcon, IonFabButton, IonFab, IonContent, IonHeader, CommonModule, FormsModule, FormComponent, FormMomentComponent, FormAchievementsComponent, FormInspirationComponent, ViewMdComponent]
 })
 export class HomePage implements OnInit {
     isMdFormOpen: boolean = false;
     isMomentFormOpen: boolean = false;
     isAchievementFormOpen: boolean = false;
     isInspirationFormOpen: boolean = false;
+    isOpenView: boolean = false;
+    isAlertOpen: boolean = false;
+
     allMd: any = []
     allMoment: any = []
     allAchievements: any = []
@@ -30,12 +35,35 @@ export class HomePage implements OnInit {
     momentsToday: any = [];
     groupedMomentsArray: any = [];
     monthToday: Date = new Date();
+    selectedMd: any = {}
+
+    currentItemIdToDelete: number = 0
+
     month = this.monthToday.toLocaleString('default', { month: 'long' });
     year = this.monthToday.getFullYear();
 
-    constructor(private ApiService: RestApiService) {
-        addIcons({ add });
+    constructor(private ApiService: RestApiService, private toastController: ToastController) {
+        addIcons({ add, trashOutline, pencilOutline });
     }
+
+    public alertButtons = [
+        {
+            text: 'Cancel',
+            role: 'cancel',
+            handler: () => {
+                console.log('Alert canceled');
+            },
+        },
+        {
+            text: 'OK',
+            role: 'confirm',
+            handler: () => {
+                console.log('Alert confirmed');
+            },
+        },
+    ];
+
+
 
     ngOnInit() {
         this.getMd();
@@ -46,8 +74,22 @@ export class HomePage implements OnInit {
 
     /* md */
     getMd() {
-        this.allMd = this.ApiService.getAll('Myday');
+        let _allMd = this.ApiService.getAll('Myday');
         console.log(this.allMd);
+        this.allMd = _allMd.map(item => {
+            const { dayOfWeek, dayOfMonth, hours, month, year, minutes, amPm } = this.formatDate(new Date(item.date));
+
+            return {
+                ...item,
+                dayOfWeek,
+                dayOfMonth,
+                hours,
+                minutes,
+                month: this.getMonthName(month),
+                year,
+                amPm
+            }
+        })
     }
 
     handleFormMd() {
@@ -56,10 +98,16 @@ export class HomePage implements OnInit {
     }
 
     handleSubmitMd(event: Event) {
-        console.log(event);
         this.ApiService.create(event, "Myday");
         this.isMdFormOpen = false;
         this.getMd();
+    }
+
+    handleDelete(ev: any) {
+        this.ApiService.delete(ev, "Myday")
+        this.getMd();
+        this.handleCloseMd()
+        this.toastHandler("Myday deleted successfully!")
     }
 
     /* momment */
@@ -198,6 +246,28 @@ export class HomePage implements OnInit {
         this.getInspiration();
     }
 
+    showDeleteConfirmation(itemId: number): void {
+        this.currentItemIdToDelete = itemId;
+        this.isAlertOpen = true;
+    }
+
+    handleDeleteInspiration(ev: any) {
+        if (this.currentItemIdToDelete === 0) return
+
+        if (ev.detail.role === "confirm") {
+            this.ApiService.delete(this.currentItemIdToDelete, "Inspiration");
+            this.getInspiration();
+            this.toastHandler("Inspiration Successfully deleted")
+            this.isAlertOpen = false;
+
+        }
+    }
+    /* 
+        handleUpdateInspiration(id: any) {
+    
+        } */
+
+    /* other functions */
     isToday(date: Date) {
         const currentDate = new Date()
 
@@ -229,4 +299,26 @@ export class HomePage implements OnInit {
         return monthNames[month - 1];
     }
 
+    openView(item: any) {
+        this.selectedMd = item
+        this.isOpenView = !this.isOpenView;
+    }
+
+    handleCloseMd() {
+        this.isOpenView = !this.isOpenView;
+    }
+
+
+    async toastHandler(message: string, isCustom = true) {
+
+        const toast = await this.toastController.create({
+            icon: 'checkmark-circle-outline',
+            message: message,
+            cssClass: 'custom-toast',
+            duration: 3000,
+            position: "top",
+        });
+
+        toast.present();
+    }
 }

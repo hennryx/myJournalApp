@@ -32,6 +32,10 @@ export const routes: Routes = [
         component: SettingsPage,
       },
       {
+        path: 'view',
+        component: SettingsPage,
+      },
+      {
         path: '',
         redirectTo: '/tabs/home',
         pathMatch: 'full',
