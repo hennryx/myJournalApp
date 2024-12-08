@@ -1,13 +1,66 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>settings</ion-title>
-  </ion-toolbar>
+<ion-header collapse="condense">
+    <ion-toolbar>
+        <ion-title size="large">notes</ion-title>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">settings</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <div class="content_container p-4">
+        <div class="profile-container p-2">
+            <div class="badge-profile">Display & Setting Profile</div>
+
+            <div class="card bg-red-200 dark:bg-orange-950 p-8 rounded-md flex flex-col justify-center items-center">
+                <div class="avatar">
+                    <div class="core"></div>
+                </div>
+                <div class="text-xl font-bold">Mary Rose Rivera</div>
+                <div class="text-sm">julainablackamanaloatgmail.com</div>
+            </div>
+        </div>
+
+        <div class="dark-mode-container p-2">
+            <div class="card bg-red-200 dark:bg-orange-950 p-4 rounded-md " (ionChange)="toggleDarkMode()">
+                <div class="flex flex-row justify-between px-4">
+                    <ion-label class="text-xl font-bold">Dark Mode</ion-label>
+                    <ion-toggle [(ngModel)]="darkMode" class="toggle"></ion-toggle>
+                </div>
+            </div>
+
+            <div class="text-sm">
+                Adjust the appearance of Journal to reduce glare and give your eyes a break.
+            </div>
+        </div>
+
+        <div class="mt-4 p-2 h-full">
+            <div class="card bg-red-200 p-4 dark:bg-orange-950 rounded-md flex flex-col">
+                <div class="h-[10%] flex flex-row justify-between">
+                    <p>Trash Container</p>
+                    <div class="flex flex-row gap-4">
+                        Select All
+                        <ion-checkbox slot="start" class="checkbox"></ion-checkbox>
+                    </div>
+                </div>
+
+                <div class="h-80 overflow-y-auto">
+                    <div class="flex items-center justify-center w-full h-full">
+                        <p class="font-bold text-xl">Empty Trash</p>
+                    </div>
+                    <div class="container-card">
+                        <!-- Your card content -->
+                    </div>
+                </div>
+
+                <div class="flex flex-row justify-between h-[10%]">
+                    <div class="slide-scroll-container">
+                        <p>Slide Scroll</p>
+                    </div>
+
+                    <div class="selectall flex flex-row gap-4">
+                        <div>Remove Selected</div>
+                        <div>Clear</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </ion-content>

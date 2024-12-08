@@ -32,10 +32,22 @@
  * For more info, please see:
  * https://ionicframework.com/docs/theming/dark-mode
  */
+/* 
+@import "@ionic/angular/css/palettes/dark.always.css";
+@import "@ionic/angular/css/palettes/dark.class.css";
+@import '@ionic/angular/css/palettes/dark.system.css'; */
+@import "@ionic/angular/css/palettes/dark.system.css";
+body{
+  --ion-background-color: #FEF8E5;
+  --ion-text-color: #530909;
+    --ion-text-placeholder: #530909;
 
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
-/* @import '@ionic/angular/css/palettes/dark.system.css'; */
+}
+body.dark {
+  --ion-background-color: #250001;
+  --ion-text-color: #F0E1A9;
+  --ion-text-placeholder: #F0E1A9;
+}
 
 
 /* wag gagalawin tong mga css nato! */
@@ -98,7 +110,7 @@ ion-toolbar {
 }
 
 ion-title {
-  color: white !important;
+  color: white;
 }
 
 ion-button.mood {

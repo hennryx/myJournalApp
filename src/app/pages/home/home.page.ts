@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonFab, IonFabButton, IonIcon, IonAlert, IonPopover, IonButton } from '@ionic/angular/standalone';
-
 import { addIcons } from 'ionicons';
-import { add, pencilOutline, trashOutline } from 'ionicons/icons';
+import { add, pencilOutline, searchOutline, trashOutline } from 'ionicons/icons';
 import { FormComponent } from "./form/form.component";
 import { RestApiService } from 'src/app/services/rest-api.service';
 import { FormMomentComponent } from "./form-moment/form-moment.component";
@@ -29,17 +28,17 @@ export class HomePage implements OnInit {
     isOpenView: boolean = false;
     isAlertOpen: boolean = false;
 
-    allMoods: any = []
-    allMd: any = []
-    allMoment: any = []
-    allAchievements: any = []
-    allInspiration: any = []
+    allMoods: any = [];
+    allMd: any = [];
+    allMoment: any = [];
+    allAchievements: any = [];
+    allInspiration: any = [];
     momentsToday: any = [];
     groupedMomentsArray: any = [];
     monthToday: Date = new Date();
-    selectedMd: any = {}
+    selectedMd: any = {};
 
-    currentItemIdToDelete: number = 0
+    currentItemIdToDelete: number = 0;
 
     month = this.monthToday.toLocaleString('default', { month: 'long' });
     year = this.monthToday.getFullYear();
@@ -48,7 +47,7 @@ export class HomePage implements OnInit {
     selectedDay: string | null = null;
 
     constructor(private ApiService: RestApiService, private toastController: ToastController) {
-        addIcons({ add, trashOutline, pencilOutline });
+        addIcons({ add, trashOutline, pencilOutline, searchOutline });
     }
 
     public alertButtons = [
@@ -67,8 +66,6 @@ export class HomePage implements OnInit {
             },
         },
     ];
-
-
 
     ngOnInit() {
         this.getMd();
@@ -402,5 +399,10 @@ export class HomePage implements OnInit {
         });
 
         toast.present();
+    }
+
+    handleSearch() {
+        console.log("im clicked");
+        
     }
 }
