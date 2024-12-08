@@ -34,7 +34,20 @@ export class RestApiService {
 
   delete(id: number, storageKey: string): void {
     const items = this.getAll(storageKey);
-    const filteredItems = items.filter((item) => item.id !== id);
-    localStorage.setItem(storageKey, JSON.stringify(filteredItems));
+    const itemToDelete = items.find((item) => item.id === id);
+
+    if (itemToDelete) {
+      const filteredItems = items.filter((item) => item.id !== id);
+      localStorage.setItem(storageKey, JSON.stringify(filteredItems));
+
+      const deletedItems = this.getAll('delete');
+      const updatedItem = {
+        ...itemToDelete,
+        deletedFrom: storageKey,
+        deletedAt: new Date().toISOString() 
+      };
+      deletedItems.push(updatedItem);
+      localStorage.setItem('delete', JSON.stringify(deletedItems));
+    }
   }
 }

@@ -1,0 +1,53 @@
+.daily-journal-header {
+    background: #681F20;
+    color: #f8f0e5;
+    font-family: 'Georgia', serif;
+    text-align: start;
+    display: flex;
+    place-items: end;
+    font-size: 1.8rem;
+  
+  
+    .title-container {
+      margin: 13.5px;
+  
+      width: 100%;
+      place-items: end;
+      display: flex;
+      justify-content: space-between;
+  
+    }
+  
+    .title {
+      color: #EAA9A9;
+      font-family: "PP Right Gothic";
+      font-style: normal;
+      font-weight: 500;
+      line-height: normal;
+      text-transform: capitalize;
+    }
+  
+    .img {
+      width: 20px;
+      height: 20px;
+      background-position: center;
+      background-size: contain;
+      background-repeat: no-repeat !important;
+      background: url(home-assets/vec.svg);
+      animation: rotate-header 3s linear infinite;
+      /* Infinite rotation animation */
+    }
+  
+    /* Keyframes for 360-degree rotation */
+    @keyframes rotate-header {
+      0% {
+        transform: rotate(0deg);
+        /* Starting position */
+      }
+  
+      100% {
+        transform: rotate(360deg);
+        /* Full rotation */
+      }
+    }
+  }

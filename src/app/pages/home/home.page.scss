@@ -23,7 +23,6 @@
 
     color: #EAA9A9;
     font-family: "PP Right Gothic";
-    font-size: 20px;
     font-style: normal;
     font-weight: 500;
     line-height: normal;
@@ -73,7 +72,6 @@
 .main {
 
 
-  --background: #FFFBEE;
   position: relative;
   display: grid;
   width: 100%;
@@ -111,7 +109,7 @@
 
       .col-container {
         margin-right: 5px;
-        width: 86px;
+        width: 110px;
         height: 95%;
 
         display: grid;
@@ -250,7 +248,6 @@
         align-items: flex-end;
 
         h3 {
-          color: black;
           font-family: "PP Right Gothic";
           font-size: 20px;
           font-style: normal;
@@ -313,7 +310,6 @@
               font-size: 11.11px;
               opacity: .5;
               text-transform: capitalize;
-              color: #000000;
               line-height: 14px;
             }
 
@@ -343,6 +339,7 @@
               background: #5D3C3C;
               border-radius: 100%;
               height: 100%;
+              width: 68px;
               display: flex;
               justify-content: center;
               place-items: center;
@@ -395,7 +392,8 @@
   .row-three {
 
     grid-area: row3;
-    height: 60vh;
+    height: fit-content;
+    max-height: 60vh;
     display: grid;
     grid-template-areas:
       "row1"
@@ -410,9 +408,6 @@
       justify-self: start;
 
       grid-area: row1;
-
-
-      color: var(--Accent, #000);
       font-family: "PP Right Gothic";
 
       font-style: normal;
@@ -433,6 +428,7 @@
       display: flex;
       flex-direction: row;
       gap: 1rem;
+      height: max-content;
       overflow-x: auto;
       overflow-y: hidden;
       width: 100%;
@@ -440,7 +436,7 @@
       flex-wrap: nowrap;
 
       .container {
-        background: #FFE9F7;
+        /* background: #FFE9F7; */
         border: 1px solid rgba(255, 0, 144, 0.14);
         width: 100%;
         min-width: 21rem;
@@ -467,7 +463,7 @@
 
 
             display: flex;
-            justify-content: space-between;
+            justify-content: start;
             padding-left: 12px;
             padding-right: 12px;
 
@@ -477,7 +473,7 @@
               width: 53px;
 
 
-              background: rgb(255, 255, 255);
+              /* background: rgb(255, 255, 255); */
               border-radius: 10px;
               box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.25);
               display: flex;
@@ -490,7 +486,6 @@
                 font-family: "General Sans";
                 margin-top: 4px;
                 width: 55px;
-                font-size: 11px;
                 line-height: 0px !important;
                 color: #000;
                 font-weight: 600;
@@ -499,9 +494,7 @@
               }
 
               span {
-                margin-top: -18px;
                 text-align: center;
-                width: 55px;
                 color: var(--Accent, #000);
                 font-family: "General Sans";
                 font-size: 23px;
@@ -587,7 +580,7 @@
 
     grid-area: row4;
     height: fit-content;
-    max-height: 35vh;
+    max-height: 40vh;
     width: 100%;
     padding: 10px;
     overflow-x: hidden;
@@ -596,14 +589,9 @@
 
     .container-old-moment {
       height: 100%;
-      background: #FFE9F7;
-      border-radius: 24px;
+      /* background: #FFE9F7; */
+      /* border-radius: 24px; */
       width: 100%;
-/* 
-      display: grid;
-      grid-template-rows: 25% 1fr;
-      grid-template-areas: "ro1" "ro2"; */
-
 
       .row-old-title {
 
@@ -611,7 +599,6 @@
 
         p {
           margin-left: 20px;
-          color: var(--Accent, #000);
           font-family: "PP Right Gothic";
           font-size: 20px;
           font-style: normal;
@@ -625,22 +612,14 @@
 
       .row-old-content {
         display: grid;
-
         grid-area: ro2;
-
-
 
         .child-container {
           width: 100%;
           height: 59px;
-
-
-
           display: flex;
-          justify-content: space-between;
           padding-left: 12px;
           padding-right: 12px;
-
 
 
           .box {
@@ -651,7 +630,7 @@
             box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.25);
             display: flex;
             justify-content: center;
-
+            gap: 10px;
             align-items: center;
             flex-wrap: wrap;
 
@@ -659,10 +638,7 @@
 
               font-family: "General Sans";
               margin-top: 4px;
-              width: 55px;
-              font-size: 11px;
               line-height: 0px !important;
-              color: #000;
               font-weight: 600;
               opacity: .5;
               text-align: center;
@@ -688,11 +664,9 @@
             margin: 5px;
 
             .small-title {
-              color: #000;
               opacity: .5;
               margin-bottom: 3px;
               width: 100%;
-              font-size: 8.5px;
               font-weight: 500;
               text-transform: uppercase;
               font-family: "General Sans";
@@ -700,7 +674,6 @@
             }
 
             .description {
-              color: #000;
               width: 100%;
               font-size: 14px;
 
@@ -724,7 +697,6 @@
       justify-content: space-between;
       place-items: center;
       font-family: "PP Right Gothic";
-      color: #000;
       font-size: 24px;
       border-bottom: 1px solid #ff009063;
       ;
@@ -778,7 +750,6 @@
         border-radius: 18px;
         position: relative;
         overflow: hidden;
-        background: #FFE9F7;
         width: 100%;
         height: 85px;
         min-height: 85px;
@@ -791,7 +762,6 @@
 
         grid-template-columns: 72.5% 1fr;
         grid-template-rows: 35% 1fr;
-        color: black;
 
         .image {
 
@@ -820,23 +790,12 @@
           margin-left: 8px;
           margin-right: 8px;
           opacity: .5;
-
-          p {
-            font-size: 9px;
-
-          }
-
-          span {
-            font-size: 9px;
-
-          }
         }
 
         .description {
 
           grid-area: des;
           margin-left: 8px;
-          font-size: 11.3px;
           justify-content: space-around;
         }
       }
@@ -884,7 +843,6 @@
         justify-content: space-between;
         place-items: center;
         font-family: "PP Right Gothic";
-        color: #000;
         font-size: 24px;
 
         ;
@@ -949,7 +907,6 @@
             border-radius: 18px;
             position: relative;
             overflow: hidden;
-            background: #FFE9F7;
             width: 240px !important;
             height: 190px;
             display: grid;
@@ -962,7 +919,6 @@
 
             grid-template-columns: 1fr;
 
-            color: black;
 
             .image {
 
@@ -1025,10 +981,7 @@
               width: 85%;
               grid-area: des;
               margin-left: 8px;
-              font-size: 12px !important;
               justify-content: space-around;
-
-
               text-wrap: wrap;
               line-break: anywhere;
               height: max-content;

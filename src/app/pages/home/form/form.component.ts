@@ -49,12 +49,11 @@ export class FormComponent {
 
     async onSubmit(event: Event): Promise<void> {
         event.preventDefault();
-        if (this.title && this.imagePreview && this.selectedCardIndex !== null) {
+        if (this.title && this.imagePreview ) {
             const newItem = {
                 id: Date.now(),
                 title: this.title,
                 image: this.imagePreview,
-                /* card: this.cards[this.selectedCardIndex], */
                 date: new Date()
             };
             this.handleSubmit.emit(newItem);

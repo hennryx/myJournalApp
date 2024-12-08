@@ -4,6 +4,7 @@ import { NotesPage } from './pages/notes/notes.page';
 import { SettingsPage } from './pages/settings/settings.page';
 import { TabsPage } from './tabs/tabs.page';
 import { HeroPage } from './hero/hero.page';
+import { EventsPage } from './pages/events/events.page';
 
 export const routes: Routes = [
   {
@@ -28,6 +29,10 @@ export const routes: Routes = [
         component: NotesPage,
       },
       {
+        path: 'events',
+        component: EventsPage,
+      },
+      {
         path: 'settings',
         component: SettingsPage,
       },
@@ -41,5 +46,9 @@ export const routes: Routes = [
         pathMatch: 'full',
       },
     ],
+  },
+  {
+    path: 'events',
+    loadComponent: () => import('./pages/events/events.page').then( m => m.EventsPage)
   },
 ];

@@ -73,6 +73,11 @@ export class HomePage implements OnInit {
         this.getAchievements();
         this.getInspiration();
         this.getMoods()
+
+        if (localStorage.getItem('dark')) {
+            const dark = JSON.parse(localStorage.getItem('dark') || "")
+            document.body.classList.toggle('dark', dark);
+        }
     }
 
     /* moods */
@@ -93,15 +98,15 @@ export class HomePage implements OnInit {
             mood: emoji,
             date: new Date().toISOString()
         };
-        
+
         const existingMood = this.allMoods.find((item: any) => item.day === day);
         if (existingMood) {
             const updatedMood = {
                 ...existingMood,
-                mood: emoji, 
-                date: new Date().toISOString() 
+                mood: emoji,
+                date: new Date().toISOString()
             };
-            
+
             this.ApiService.update(existingMood?.id, updatedMood, 'myMoods');
             this.toastHandler("Moods Updated Successfully")
         } else {
@@ -122,9 +127,9 @@ export class HomePage implements OnInit {
             const moodDate = new Date(mood.date);
             const diffTime = Math.abs(currentDate.getTime() - moodDate.getTime());
             const diffDays = Math.floor(diffTime / (1000 * 3600 * 24));
-            
+
             if (diffDays > 7) {
-            this.ApiService.delete(mood.id, 'myMoods');
+                this.ApiService.delete(mood.id, 'myMoods');
             }
         });
 
@@ -403,6 +408,6 @@ export class HomePage implements OnInit {
 
     handleSearch() {
         console.log("im clicked");
-        
+
     }
 }

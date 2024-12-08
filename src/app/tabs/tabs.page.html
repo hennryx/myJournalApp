@@ -1,33 +1,20 @@
-<!-- <ion-tabs>
-    <ion-tab-bar slot="bottom" class="bg-red-900">
-        <ion-tab-button tab="home" routerLink="/tabs/home" class="bg-red-900">
-            <ion-icon name="home"></ion-icon>
-            <ion-label class="text-white">Home</ion-label>
-        </ion-tab-button>
-        <ion-tab-button tab="notes" routerLink="/tabs/notes" class="bg-red-900">
-            <ion-icon name="book-sharp"></ion-icon>
-            <ion-label class="text-white">My notes</ion-label>
-        </ion-tab-button>
-        <ion-tab-button tab="settings" routerLink="/tabs/settings" class="bg-red-900">
-            <ion-icon name="settings"></ion-icon>
-            <ion-label class="text-white">Settings</ion-label>
-        </ion-tab-button>
-    </ion-tab-bar>
-</ion-tabs> -->
-
 <ion-tabs>
-    <ion-tab-bar slot="bottom" class="bg-red-900">
+    <ion-tab-bar slot="bottom" class="bg-red-900 p-7">
         <ion-tab-button tab="home" routerLink="/tabs/home" class="tab-button">
-            <ion-icon name="home"></ion-icon>
-            <ion-label>Home</ion-label>
+            <ion-icon class="h-8 w-8" name="list-outline"></ion-icon>
+            <ion-label class="text-sm">Journal</ion-label>
         </ion-tab-button>
         <ion-tab-button tab="notes" routerLink="/tabs/notes" class="tab-button">
-            <ion-icon name="book-sharp"></ion-icon>
-            <ion-label>My notes</ion-label>
+            <ion-icon class="h-8 w-8" name="journal-outline"></ion-icon>
+            <ion-label class="text-sm">My notes</ion-label>
+        </ion-tab-button>
+        <ion-tab-button tab="events" routerLink="/tabs/events" class="tab-button">
+            <ion-icon class="h-8 w-8" name="calendar-outline"></ion-icon>
+            <ion-label class="text-sm">Events</ion-label>
         </ion-tab-button>
         <ion-tab-button tab="settings" routerLink="/tabs/settings" class="tab-button">
-            <ion-icon name="settings"></ion-icon>
-            <ion-label>Settings</ion-label>
+            <ion-icon class="h-8 w-8" name="settings-outline"></ion-icon>
+            <ion-label class="text-sm">Settings</ion-label>
         </ion-tab-button>
     </ion-tab-bar>
 </ion-tabs>
