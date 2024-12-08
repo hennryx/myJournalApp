@@ -17,7 +17,7 @@ import { ToastController } from '@ionic/angular';
     templateUrl: './home.page.html',
     styleUrls: ['./home.page.scss'],
     standalone: true,
-    imports: [IonButton, IonPopover, IonAlert, IonIcon, IonFabButton, IonFab, IonContent, IonHeader, CommonModule, FormsModule, FormComponent, FormMomentComponent, FormAchievementsComponent, FormInspirationComponent, ViewMdComponent]
+    imports: [IonPopover, IonAlert, IonIcon, IonFabButton, IonFab, IonContent, IonHeader, CommonModule, FormsModule, FormComponent, FormMomentComponent, FormAchievementsComponent, FormInspirationComponent, ViewMdComponent]
 })
 export class HomePage implements OnInit {
     daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
@@ -410,4 +410,9 @@ export class HomePage implements OnInit {
         console.log("im clicked");
 
     }
+
+    getMoodsForDay(day: string) {
+        return this.allMoods.filter((mood: any) => mood.day === day);
+    }
+    
 }

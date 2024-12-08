@@ -59,12 +59,13 @@
                             <div class="ellipse-one">
                                 <div class="ellipse-two flex items-center justify-center">
                                     <button [id]="day" class="h-full w-full mood relative" (click)="openPopup(day)" #moodButton>
-                                        <div class="h-full w-full" *ngFor="let item of allMoods; let i = index">
-                                            <div class="h-full w-full" *ngIf="item.day === day">
-                                                <img [src]="'assets/emoji/' + item.mood + '-' + item.day.toLowerCase() + '.png'" alt="{{item.mood}}">
-                                            </div>
+                                        <div *ngFor="let item of getMoodsForDay(day)">
+                                            <img [src]="'assets/emoji/' + item.mood + '-' + item.day.toLowerCase() + '.png'" alt="{{item.mood}}" class="h-full w-full">
                                         </div>
-                                        <ion-icon *ngIf="!hasMood(day)" class="absolute top-0 bottom-0 z-10" name="add"></ion-icon>
+                                        
+                                        <div class="absolute top-0 bottom-0 z-10 h-full w-full flex items-center justify-center">
+                                            <ion-icon *ngIf="!hasMood(day)" class="h-8 w-8 text-white" name="add"></ion-icon>
+                                        </div>
                                     </button>
                                 </div>
                             </div>
@@ -102,12 +103,12 @@
             </div>
         </div>
 
-        <div class="row-three gap-2 mb-6">
+        <div class="row-three gap-2 mb-4">
             <div class="moment-rw-one">
                 <h1>Moment of the Day</h1>
             </div>
 
-            <div class="moment-rw-two">
+            <div class="moment-rw-two mb-2">
                 <div class="container bg-red-200 dark:bg-orange-950" *ngFor="let item of momentsToday; let i = index">
                     <div class="flex flex-row justify-between p-2">
                         <div
@@ -135,7 +136,7 @@
 
             </div>
         </div>
-        <div class="p-2 rounded-lg">
+        <div class="p-2 rounded-lg mt-2">
             <div class="row-four space-y-2 bg-red-200 dark:bg-orange-950 rounded-md">
                 <div *ngFor="let group of groupedMomentsArray" class="container-old-moment space-y-4">
                     <div class="row-old-title flex justify-start items-center p-2">

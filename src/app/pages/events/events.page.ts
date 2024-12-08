@@ -14,7 +14,7 @@ import { ToastController } from '@ionic/angular';
   templateUrl: './events.page.html',
   styleUrls: ['./events.page.scss'],
   standalone: true,
-  imports: [IonAlert, IonIcon, IonFab, IonFabButton, IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonAlert, IonIcon, IonFab, IonFabButton, IonContent, IonHeader, CommonModule, FormsModule]
 })
 export class EventsPage implements OnInit {
   constructor(private apiService: RestApiService, private toastController: ToastController) {

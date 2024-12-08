@@ -39,19 +39,42 @@
                 <div class="h-[10%] flex flex-row justify-between">
                     <p>Trash Container</p>
                     <div class="flex flex-row gap-4">
-                        Select All
-                        <ion-checkbox slot="start" class="checkbox"></ion-checkbox>
+                        <ion-checkbox slot="start" class="checkbox" [(ngModel)]="selectAll"
+                            (ionChange)="toggleSelectAll()">
+                        </ion-checkbox>
+                        <span class="ml-2">Select All</span>
                     </div>
                 </div>
 
-                <div class="h-80 overflow-y-auto">
-                    <div class="flex items-center justify-center w-full h-full">
-                        <p class="font-bold text-xl">Empty Trash</p>
+                <div class="h-80 rounded-lg p-4 ">
+                    <div class="flex items-center justify-center h-full" *ngIf="trash.length === 0">
+                        <p class="font-bold text-xl text-gray-600 dark:text-gray-300">Empty Trash</p>
                     </div>
-                    <div class="container-card">
-                        <!-- Your card content -->
+
+                    <div class="flex flex-row gap-4 w-full overflow-x-auto" *ngIf="trash.length > 0">
+                        <div *ngFor="let item of trash"
+                            class="flex-none bg-red-100 dark:bg-[#250001] p-4 w-64 rounded shadow hover:shadow-lg transition-shadow">
+                            <ion-checkbox slot="start" class="checkbox mb-4" [checked]="selectedItems.has(item.id)"
+                                (ionChange)="toggleItemSelection(item.id)">
+                            </ion-checkbox>
+
+                            <img *ngIf="item?.image" [src]="item.image" alt="{{ item.title }}"
+                                class="w-full h-32 object-cover rounded mb-4" />
+                            <h3 class="font-bold text-lg text-gray-800 dark:text-gray-200 truncate">
+                                {{ item.title }}
+                            </h3>
+                            <p class="text-gray-600 dark:text-gray-400 text-sm">
+                                Deleted from: <span class="font-medium">{{ item.deletedFrom }}</span>
+                            </p>
+
+                            <p class="text-gray-600 dark:text-gray-400 text-sm">
+                                Deleted at: {{ item.deletedAt | date: 'short' }}
+                            </p>
+                        </div>
                     </div>
                 </div>
+
+
 
                 <div class="flex flex-row justify-between h-[10%]">
                     <div class="slide-scroll-container">
@@ -59,8 +82,10 @@
                     </div>
 
                     <div class="selectall flex flex-row gap-4">
-                        <div>Remove Selected</div>
-                        <div>Clear</div>
+                        <button class="bg-transparent" (click)="removeSelected()">Remove
+                            Selected</button>
+                        <button (click)="clearTrash()">Clear
+                            Trash</button>
                     </div>
                 </div>
             </div>

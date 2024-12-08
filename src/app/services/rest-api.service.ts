@@ -32,6 +32,7 @@ export class RestApiService {
     }
   }
 
+  
   delete(id: number, storageKey: string): void {
     const items = this.getAll(storageKey);
     const itemToDelete = items.find((item) => item.id === id);
@@ -49,5 +50,11 @@ export class RestApiService {
       deletedItems.push(updatedItem);
       localStorage.setItem('delete', JSON.stringify(deletedItems));
     }
+  }
+
+  deletePermanent(id: number, storageKey: string): void {
+    const items = this.getAll(storageKey);
+    const filteredItems = items.filter((item) => item.id !== id);
+    localStorage.setItem(storageKey, JSON.stringify(filteredItems));
   }
 }

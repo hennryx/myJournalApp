@@ -1,12 +1,81 @@
 <ion-header class="daily-journal-header">
     <div class="title-container">
-        <div class="title text-2xl">Notes</div>
-        <div class="flex gap-2">
-            <div class="img"></div>
-        </div>
+        <div class="title">my notes</div>
+        <div class="img"></div>
     </div>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-    
+
+
+<ion-content class="main">
+    <ion-fab *ngIf="!isNotesOpen" horizontal="end" vertical="bottom" slot="fixed">
+        <ion-fab-button (click)="handleOpenAddNotes()">
+            <ion-icon name="add" class="text-white"></ion-icon>
+        </ion-fab-button>
+    </ion-fab>
+
+    <div class="content_container">
+        <div class="welcome-container">
+            <p>Hello and Welcome!</p>
+            <span>Writing should be fun, simple and writing tools should get out of the way. Craft is there to make this
+                happen and help you
+                'Craft' your Notes.</span>
+        </div>
+
+        <div class="main-card-container">
+            <div class="sub">Note List</div>
+            <div class="wrapper-card">
+                <div class="def">
+                    <p>Empty Note</p>
+                </div>
+                <div class="container-card">
+
+                    <div class="card" *ngFor="let note of notes">
+                        <div class="about">
+                            <div class="badge">{{ note.about || 'No add Information' }}</div>
+                            <div class="action">
+                                <div class="edit" (click)="editNote(note)" expand="full"> Edit</div>
+                                <div class="trash" (click)="trashNote(note.id)" expand="full">Trash</div>
+                            </div>
+                        </div>
+                        <div class="title-time">
+                            <div class="title">{{ note.title }}</div>
+                            <div class="date">
+                                <p class="note-meta">
+                                    Created: {{ note.createdAt | date: 'medium' }}
+                                    ({{ getTimeAgo(note.createdAt) }})
+                                </p>
+                            </div>
+                        </div>
+                        <div class="descripton">
+                            <p class="note-description">
+                                {{ note.description | slice: 0:120 }}
+                                <span *ngIf="note.description.length > 100">
+                                    ... <span (click)="openNoteDetails(note)" class="see-more">See more</span>
+                                </span>
+                            </p>
+                        </div>
+                        <div class="image-status">
+                            <div class="notice"> Image Empty</div>
+                            <div slot="start" *ngIf="note.image">
+                                <img [src]="note.image" (click)="openNoteDetails(note)" />
+                            </div>
+                            <div class="status">
+                                <div class="wrapper  note-status-btn" [ngClass]="getNoteStatusClass(note)">
+                                    <div class="item" [ngClass]="getNoteStatusClass(note)" class="note-status-btn"
+                                        expand="full">
+                                        {{ note.status }}</div>
+                                </div>
+                                <!-- (click)="presentStatusAlert(note)"  -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </ion-content>
+
+@if(isNotesOpen) {
+    <NotesForm (handleClose)="handleOpenAddNotes()" (handleSubmit)="handleFormNotes($event)"></NotesForm>
+}
