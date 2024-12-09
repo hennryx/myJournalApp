@@ -162,7 +162,7 @@
             background-position: center;
             background-repeat: no-repeat !important;
 
-            background: url(home-assets/plus-icon.svg);
+            background: url(home-assets/plus-icon1.svg);
           }
 
           .sun {
@@ -357,7 +357,7 @@
                 background-position: center;
                 background-repeat: no-repeat !important;
 
-                background: url(home-assets/plus-icon.svg);
+                background: url(home-assets/plus-icon1.svg);
               }
 
               .sun {
@@ -751,9 +751,9 @@
         position: relative;
         overflow: hidden;
         width: 100%;
-        height: 85px;
-        min-height: 85px;
-        max-height: 85px;
+        height: 100px;
+        min-height: 100px;
+        max-height: 100px;
         display: grid;
         grid-template-areas:
           "date img"

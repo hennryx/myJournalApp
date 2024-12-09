@@ -3,9 +3,6 @@
   src: url('image-assets/fonts-assets/PPRightGothic-CompactBlack.otf') format('truetype');
   font-weight: normal;
   font-style: normal;
-
-
-
 }
 
 .welcome-container {
@@ -22,29 +19,24 @@
 
   h2 {
     padding: 24px;
-    line-height: 38px;
+    line-height: 5vh;
     color: #681F20;
-    font-size: 38px;
+    font-size: 12vw;
     font-weight: bold;
-
-
+    z-index: 2;
   }
 
   .image {
-    transform: scale(1.15);
+    margin-top: 100px;
+    transform: scale(1.6);
     justify-self: center;
     z-index: 1;
     width: 280px;
-
-
     height: 50%;
     background-repeat: no-repeat !important;
     background-position: center;
     background-size: cover;
-
-
     background: url(image-assets/big-icon.svg);
-
   }
 
   .vector {
@@ -113,19 +105,4 @@
     cursor: not-allowed;
   }
 
-}
-
-
-
-.noise {
-  position: absolute;
-  pointer-events: none;
-  width: 100%;
-  background: red;
-  height: 100%;
-  opacity: .7;
-  background: url(image-assets/Noise.svg);
-
-  mix-blend-mode: exclusion;
-  z-index: 2;
 }

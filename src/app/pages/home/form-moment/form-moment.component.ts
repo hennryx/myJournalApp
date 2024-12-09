@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonButton, IonIcon } from "@ionic/angular/standalone";
 import { ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
@@ -11,10 +11,11 @@ import { checkmarkCircleOutline, imageOutline } from 'ionicons/icons';
     templateUrl: './form-moment.component.html',
     styleUrls: ['./form-moment.component.scss'],
     standalone: true,
-    imports: [IonIcon, IonButton, FormsModule, CommonModule]
+    imports: [IonIcon, IonButton, FormsModule, CommonModule, ReactiveFormsModule]
 })
-export class FormMomentComponent {
-
+export class FormMomentComponent implements OnChanges {
+    @Input() itemToUpdate: any = {};
+    @Input() isUpdateMode: boolean = false;
     @Output() handleClose = new EventEmitter<void>()
     @Output() handleSubmit = new EventEmitter<any>()
 
@@ -22,8 +23,29 @@ export class FormMomentComponent {
     title: string = '';
     description: string = "";
 
+    form: FormGroup;
+
     constructor(private toastController: ToastController) {
         addIcons({ checkmarkCircleOutline, imageOutline });
+
+        this.form = new FormGroup({
+            id: new FormControl(0),
+            title: new FormControl('', [Validators.required]),
+            description: new FormControl('', [Validators.required]),
+            image: new FormControl(null, [Validators.required])
+        });
+
+    }
+    ngOnChanges(changes: SimpleChanges): void {
+        if (changes['itemToUpdate'] && this.itemToUpdate) {
+            this.form.patchValue({
+                id: this.itemToUpdate.id,
+                title: this.itemToUpdate.title,
+                description: this.itemToUpdate.description,
+                image: this.itemToUpdate.image || null
+            });
+            this.imagePreview = this.itemToUpdate.image || null;
+        }
     }
 
     triggerFileInput(): void {
@@ -44,12 +66,11 @@ export class FormMomentComponent {
 
     async onSubmit(event: Event): Promise<void> {
         event.preventDefault();
-        if (this.title && this.imagePreview) {
+        if (this.form.valid) {
+
             const newItem = {
-                id: Date.now(),
-                title: this.title,
-                image: this.imagePreview,
-                description: this.description,
+                ...this.form.value,
+                id: Object.keys(this.itemToUpdate).length > 0 ? this.itemToUpdate.id : Date.now(),
                 date: new Date()
             };
             this.handleSubmit.emit(newItem)
@@ -76,8 +97,7 @@ export class FormMomentComponent {
     }
 
     resetForm(): void {
-        this.title = '';
-        this.imagePreview = null;
+        this.form.reset()
     }
 
     closeForm() {

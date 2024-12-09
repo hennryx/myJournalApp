@@ -9,9 +9,8 @@
             </div>
         </div>
 
-        <form (submit)="onSubmit($event)" class="space-y-4">
+        <form [formGroup]="notesForm" (ngSubmit)="onSubmit($event)" class="space-y-4">
             <div class="mb-4 relative h-4/5">
-
                 <div class="flex items-center space-x-4 absolute right-0 top-0">
                     <button type="button" (click)="triggerFileInput()" class="text-gray-700 text-3xl">
                         <ion-icon name="image-outline"></ion-icon>
@@ -19,30 +18,37 @@
                     <input #imageInput type="file" id="image" (change)="onImageSelect($event)" 
                         class="hidden" accept="image/*" />
                 </div>
-
+        
                 <div *ngIf="imagePreview" class="mt-4 mb-4 w-full flex justify-center">
                     <img [src]="imagePreview" alt="Preview" 
                          class="object-cover rounded-md w-2/5 h-auto max-h-96 mb-4" />
                 </div>
             </div>
-            <br>
+        
             <div class="mb-4 mt-4">
                 <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
-                <input type="text" id="title" [(ngModel)]="title" name="title"
-                    class="mt-1 block w-full p-2 border bg-transparent text-black border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-indigo-200"
-                    required />
+                <input type="text" id="title" formControlName="title"
+                    class="mt-1 block w-full p-2 border bg-transparent text-black border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-indigo-200" />
+                <small *ngIf="notesForm.get('title')?.touched && notesForm.get('title')?.invalid" class="text-red-600">
+                    Title is required.
+                </small>
             </div>
+        
             <div class="mb-4 mt-4">
                 <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                <textarea type="text" id="description" [(ngModel)]="description" name="description"
-                    class="mt-1 block w-full p-2 border bg-transparent text-black border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-indigo-200"
-                    required></textarea>
+                <textarea id="description" formControlName="description"
+                    class="mt-1 block w-full p-2 border bg-transparent text-black border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-indigo-200"></textarea>
+                <small *ngIf="notesForm.get('description')?.touched && notesForm.get('description')?.invalid" class="text-red-600">
+                    Description is required.
+                </small>
             </div>
+        
             <div>
-                <ion-button type="submit" expand="block" class="w-full text-white py-2 rounded-lg">
+                <ion-button type="submit" expand="block" class="w-full text-white py-2 rounded-lg" [disabled]="notesForm.invalid">
                     Save
                 </ion-button>
             </div>
         </form>
+        
     </div>
 </div>

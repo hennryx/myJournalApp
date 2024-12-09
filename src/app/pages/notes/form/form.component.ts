@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { IonButton, IonIcon } from "@ionic/angular/standalone";
 import { ToastController } from '@ionic/angular';
 import { addIcons } from 'ionicons';
@@ -11,19 +11,35 @@ import { checkmarkCircleOutline, imageOutline } from 'ionicons/icons';
     templateUrl: './form.component.html',
     styleUrls: ['./form.component.scss'],
     standalone: true,
-    imports: [IonIcon, IonButton, CommonModule, FormsModule]
+    imports: [IonIcon, IonButton, CommonModule, FormsModule, ReactiveFormsModule]
 })
-export class FormComponent {
+export class FormComponent implements OnChanges{
+    @Input() isOpenEditModal: boolean = false; 
+    @Input() itemToEdit: any = {} 
     @Output() handleClose = new EventEmitter<void>();
     @Output() handleSubmit = new EventEmitter<any>();
 
     imagePreview: string | null = null;
-    title: string = '';
-    description: string = '';
-    selectedCardIndex: number | null = null;
+    notesForm: FormGroup;
 
     constructor(private toastController: ToastController) {
         addIcons({ checkmarkCircleOutline, imageOutline });
+
+        this.notesForm = new FormGroup({
+            id: new FormControl(0),
+            title: new FormControl('', [Validators.required]),
+            description: new FormControl('', [Validators.required]),
+        });
+    }
+    ngOnChanges(changes: SimpleChanges): void {
+        if(changes['itemToEdit'] && this.itemToEdit && this.isOpenEditModal) {
+            this.notesForm.patchValue({
+                id: this.itemToEdit.id,
+                title: this.itemToEdit.title,
+                description: this.itemToEdit.description,
+            })
+            this.imagePreview = this.itemToEdit.image;
+        }
     }
 
     triggerFileInput(): void {
@@ -42,20 +58,15 @@ export class FormComponent {
         }
     }
 
-    selectCard(card: string, index: number): void {
-        this.selectedCardIndex = index;
-        this.title = card;
-    }
 
-    async onSubmit(event: Event): Promise<void> {
+    async onSubmit(event: Event) {
         event.preventDefault();
-        if (this.title && this.imagePreview ) {
+        if(this.notesForm.valid) {
             const newItem = {
+                ...this.notesForm.value,
                 id: Date.now(),
-                title: this.title,
-                description: this.description,
                 image: this.imagePreview,
-                date: new Date()
+                date: new Date(),
             };
             this.handleSubmit.emit(newItem);
 
@@ -69,7 +80,7 @@ export class FormComponent {
 
             toast.present();
             this.resetForm();
-        } else {
+        }else {
             const toast = await this.toastController.create({
                 message: 'Please fill in all fields.',
                 duration: 3000,
@@ -78,12 +89,11 @@ export class FormComponent {
 
             await toast.present();
         }
+        
     }
 
     resetForm(): void {
-        this.title = '';
-        this.imagePreview = null;
-        this.selectedCardIndex = null;
+        this.notesForm.reset()
     }
 
     closeForm() {

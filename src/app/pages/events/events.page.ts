@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar, IonFabButton, IonFab, IonIcon, IonAlert } from '@ionic/angular/standalone';
+import { IonContent, IonHeader, IonFabButton, IonFab, IonIcon, IonAlert } from '@ionic/angular/standalone';
 
 import { addIcons } from 'ionicons';
-import { add, arrowBackOutline, chevronBackOutline, chevronForwardOutline, closeOutline, pencilOutline, trashBinOutline, trashOutline, calendarOutline } from 'ionicons/icons'
+import { add, arrowBackOutline, chevronBackOutline, chevronForwardOutline, closeOutline, pencilOutline, trashOutline, calendarOutline } from 'ionicons/icons'
 import { RestApiService } from 'src/app/services/rest-api.service';
 import { ToastController } from '@ionic/angular';
 

@@ -1,35 +1,40 @@
 <div class="flex flex-col items-center justify-center bg-gray-100 min-h-screen">
-  <div class="w-full min-h-screen max-w-md bg-white rounded-lg shadow-md  p-6">
+    <div class="w-full min-h-screen max-w-md bg-white rounded-lg shadow-md  p-6">
 
-      <div class="p-4 border-b border-gray-200 flex justify-between items-start">
-          <h2 class="text-xl font-bold text-gray-800 mb-4">Add New Inspiration</h2>
-          <div>
-              <button (click)="closeForm()" class="text-black">
-                  x
-              </button>
-          </div>
-      </div>
+        <div class="p-4 border-b border-gray-200 flex justify-between items-start">
+            <h2 class="text-xl font-bold text-gray-800 mb-4">
+                {{ this.itemToUpdate ? 'Update Inspiration' : 'Add New Inspiration' }}</h2>
+            <div>
+                <button (click)="closeForm()" class="text-black">x</button>
+            </div>
+        </div>
 
-      <form (submit)="onSubmit($event)" class="space-y-4">
-          <div>
-              <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
-              <input type="text" id="title" [(ngModel)]="title" name="title"
-                  class="mt-1 block w-full p-2 border bg-transparent text-black border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-indigo-200"
-                  required />
-          </div>
+        <form [formGroup]="form" (ngSubmit)="onSubmit($event)" class="space-y-4">
+            <div>
+                <label for="title" class="block text-sm font-medium text-gray-700">Title</label>
+                <input type="text" id="title" formControlName="title"
+                    class="mt-1 block w-full p-2 border bg-transparent text-black border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-indigo-200" />
+                <div *ngIf="form.get('title')?.invalid && form.get('title')?.touched" class="text-red-500 text-sm">
+                    Title is required.
+                </div>
+            </div>
 
-          <div>
-              <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-              <textarea id="description" [(ngModel)]="description" name="description" rows="3"
-                  class="mt-1 block w-full p-2 border border-gray-300 bg-transparent text-black rounded-lg focus:outline-none focus:ring focus:ring-indigo-200"
-                  required></textarea>
-          </div>
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                <textarea id="description" formControlName="description" rows="3"
+                    class="mt-1 block w-full p-2 border border-gray-300 bg-transparent text-black rounded-lg focus:outline-none focus:ring focus:ring-indigo-200"></textarea>
+                <div *ngIf="form.get('description')?.invalid && form.get('description')?.touched"
+                    class="text-red-500 text-sm">
+                    Description is required.
+                </div>
+            </div>
 
-          <div>
-              <ion-button type="submit" expand="block" class="w-full text-white py-2 rounded-lg">
-                  Save
-              </ion-button>
-          </div>
-      </form>
-  </div>
+            <div>
+                <ion-button type="submit" expand="block" class="w-full text-white py-2 rounded-lg"
+                    [disabled]="form.invalid">
+                    {{ this.itemToUpdate ? 'Update' : 'Save' }}
+                </ion-button>
+            </div>
+        </form>
+    </div>
 </div>

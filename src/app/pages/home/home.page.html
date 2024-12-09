@@ -53,18 +53,22 @@
                     <p>Third Week of Nov 22, 2024</p>
                 </div>
                 <div class="row-md-2">
-                    
+
                     <div class="container space-x-4">
                         <div class="col-container-mood" *ngFor="let day of daysOfWeek">
                             <div class="ellipse-one">
                                 <div class="ellipse-two flex items-center justify-center">
-                                    <button [id]="day" class="h-full w-full mood relative" (click)="openPopup(day)" #moodButton>
+                                    <button [id]="day" class="h-full w-full mood relative" (click)="openPopup(day)"
+                                        #moodButton>
                                         <div *ngFor="let item of getMoodsForDay(day)">
-                                            <img [src]="'assets/emoji/' + item.mood + '-' + item.day.toLowerCase() + '.png'" alt="{{item.mood}}" class="h-full w-full">
+                                            <img [src]="'assets/emoji/' + item.mood + '-' + item.day.toLowerCase() + '.png'"
+                                                alt="{{item.mood}}" class="h-full w-full">
                                         </div>
-                                        
-                                        <div class="absolute top-0 bottom-0 z-10 h-full w-full flex items-center justify-center">
-                                            <ion-icon *ngIf="!hasMood(day)" class="h-8 w-8 text-white" name="add"></ion-icon>
+
+                                        <div
+                                            class="absolute top-0 bottom-0 z-10 h-full w-full flex items-center justify-center">
+                                            <ion-icon *ngIf="!hasMood(day)" class="h-8 w-8 text-white"
+                                                name="add"></ion-icon>
                                         </div>
                                     </button>
                                 </div>
@@ -103,7 +107,7 @@
             </div>
         </div>
 
-        <div class="row-three gap-2 mb-4">
+        <div class="row-three gap-2 mb-4 mt-4">
             <div class="moment-rw-one">
                 <h1>Moment of the Day</h1>
             </div>
@@ -116,8 +120,11 @@
                             <p class="text-lg text-[#530909] dark:text-[#F0E1A9]">{{ item.dayOfWeek }}</p>
                             <span class="text-3xl text-[#530909] dark:text-[#F0E1A9]">{{ item.dayOfMonth }}</span>
                         </div>
-
                         <p class="time">{{item.hours}}:{{item.minutes}} {{item.amPm}}</p>
+
+                        <button (click)="showActionSheet(item, 'Moment')" class="btn-action">
+                            <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+                        </button>
                     </div>
 
                     <div class="p-2 flex flex-col">
@@ -142,15 +149,22 @@
                     <div class="row-old-title flex justify-start items-center p-2">
                         <p>{{ group.month }} {{ group.year }}</p>
                     </div>
-                    <div class="child-container border-gray-300 flex flex-row items-end gap-2" *ngFor="let item of group.moments">
+                    <div class="child-container border-gray-300 flex flex-row items-end gap-2"
+                        *ngFor="let item of group.moments">
                         <div
                             class="w-14 h-14 bg-white bg-opacity-25 flex items-center justify-center flex-col rounded-xl">
                             <p class="text-md text-[#530909] dark:text-[#F0E1A9]">{{ item.dayOfWeek }}</p>
                             <span class="text-lg text-[#530909] dark:text-[#F0E1A9]">{{ item.dayOfMonth }}</span>
                         </div>
-                        <div class=" h-14 text-container flex flex-col justify-between">
-                            <div class="small-title text-xs">{{ item.title }}</div>
-                            <div class="description text-sm">{{ item.description }}</div>
+                        <div class=" h-14 w-full text-container flex flex-row justify-between">
+                            <div class="text-container flex flex-col justify-between">
+                                <div class="small-title text-xs">{{ item.title }}</div>
+                                <div class="description text-sm">{{ item.description }}</div>
+                            </div>
+
+                            <button (click)="showActionSheet(item, 'Moment')" class="btn-action">
+                                <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -180,7 +194,13 @@
                     </div>
 
                     <div class="description">{{item.description}}</div>
-                    <div class="image">
+                    <div class="image flex flex-col gap-2 p-2 items-end">
+                        <div class="flex items-end justify-end w-full mt-2">
+                            <button (click)="showActionSheet(item, 'Achievements')" class="btn-action">
+                                <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+                            </button>
+
+                        </div>
                         <div class="wrapper">
                             <img [src]="item.image" [alt]="item.title">
                         </div>
@@ -193,7 +213,7 @@
 
 
 
-            <div class="container-qoutes">
+            <div class="container-qoutes mb-10">
                 <div class="title-button">
 
                     <p>Inspirational Quotes</p>
@@ -210,7 +230,8 @@
 
                     <div class="container-item ">
 
-                        <div class="box bg-red-200 dark:bg-orange-950" *ngFor="let item of allInspiration; let i = index">
+                        <div class="box bg-red-200 dark:bg-orange-950"
+                            *ngFor="let item of allInspiration; let i = index">
 
                             <div class="date">
                                 <p>{{item.month}} {{item.dayOfMonth}}, {{item.year}} - {{item.dayOfWeek}}</p>
@@ -221,8 +242,8 @@
                             <div class="image">
                                 <div class="wrapper"></div>
                                 <div class="pr-2 flex flex-row gap-2">
-                                    <button (click)="showDeleteConfirmation(item.id)">
-                                        <ion-icon name="trash-outline" class="text-red-500"></ion-icon>
+                                    <button (click)="showActionSheet(item, 'Inspiration')" class="btn-action">
+                                        <ion-icon name="ellipsis-vertical-outline"></ion-icon>
                                     </button>
                                 </div>
                             </div>
@@ -236,28 +257,29 @@
 
 
     <ion-alert [isOpen]="isAlertOpen" header="Are you sure you want to delete this?" [buttons]="alertButtons"
-        (didDismiss)="handleDeleteInspiration($event)">
+        (didDismiss)="handleDeleteItem($event)">
     </ion-alert>
 
 </ion-content>
 
 @if(isMdFormOpen) {
-<MdForm (handleClose)="handleFormMd()" (handleSubmit)="handleSubmitMd($event)"></MdForm>
+    <MdForm (handleClose)="handleFormMd()" (handleSubmit)="handleSubmitMd($event)"></MdForm>
 }
 
 @if(isMomentFormOpen) {
-<FormMoment (handleClose)="handleFormMoment()" (handleSubmit)="handleSubmitMoment($event)"></FormMoment>
+    <FormMoment (handleClose)="handleFormMoment()" (handleSubmit)="handleSubmitMoment($event)" [itemToUpdate]="currentItemToUpdate">
+    </FormMoment>
 }
 
 @if(isAchievementFormOpen) {
-<FormAchievements (handleClose)="handleFormAchievements()" (handleSubmit)="handleSubmitAchievement($event)">
-</FormAchievements>
+    <FormAchievements (handleClose)="handleFormAchievements()" (handleSubmit)="handleSubmitAchievement($event)" [itemToUpdate]="currentItemToUpdate">
+    </FormAchievements>
 }
 @if(isInspirationFormOpen) {
-<FormInspiration (handleClose)="handleFormInspiration()" (handleSubmit)="handleSubmitInspiration($event)">
-</FormInspiration>
+    <FormInspiration (handleClose)="handleFormInspiration()" (handleSubmit)="handleSubmitInspiration($event)" [itemToUpdate]="currentItemToUpdate">
+    </FormInspiration>
 }
 
 @if(isOpenView) {
-<ViewMd [data]="selectedMd" (handleClose)="handleCloseMd()" (handleDelete)="handleDelete($event)"></ViewMd>
+    <ViewMd [data]="selectedMd" (handleClose)="handleCloseMd()" (handleDelete)="handleDelete($event)"></ViewMd>
 }

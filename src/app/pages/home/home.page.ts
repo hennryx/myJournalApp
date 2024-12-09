@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonFab, IonFabButton, IonIcon, IonAlert, IonPopover, IonButton } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { add, pencilOutline, searchOutline, trashOutline } from 'ionicons/icons';
+import { add, pencilOutline, searchOutline, trashOutline, ellipsisVerticalOutline } from 'ionicons/icons';
 import { FormComponent } from "./form/form.component";
 import { RestApiService } from 'src/app/services/rest-api.service';
 import { FormMomentComponent } from "./form-moment/form-moment.component";
@@ -11,6 +11,7 @@ import { FormAchievementsComponent } from "./form-achievements/form-achievements
 import { FormInspirationComponent } from './form-inspiration/form-inspiration.component';
 import { ViewMdComponent } from "./view-md/view-md.component";
 import { ToastController } from '@ionic/angular';
+import { ActionSheetController } from '@ionic/angular';
 
 @Component({
     selector: 'app-home',
@@ -27,6 +28,7 @@ export class HomePage implements OnInit {
     isInspirationFormOpen: boolean = false;
     isOpenView: boolean = false;
     isAlertOpen: boolean = false;
+    isEditMode: boolean = false;
 
     allMoods: any = [];
     allMd: any = [];
@@ -39,6 +41,8 @@ export class HomePage implements OnInit {
     selectedMd: any = {};
 
     currentItemIdToDelete: number = 0;
+    currentItemCategoryToDelete: string = "";
+    currentItemToUpdate: any = {};
 
     month = this.monthToday.toLocaleString('default', { month: 'long' });
     year = this.monthToday.getFullYear();
@@ -46,8 +50,8 @@ export class HomePage implements OnInit {
     isPopupOpen = false;
     selectedDay: string | null = null;
 
-    constructor(private ApiService: RestApiService, private toastController: ToastController) {
-        addIcons({ add, trashOutline, pencilOutline, searchOutline });
+    constructor(private ApiService: RestApiService, private toastController: ToastController, private actionSheetController: ActionSheetController, private cdr: ChangeDetectorRef ) {
+        addIcons({ pencilOutline, trashOutline, searchOutline, add, ellipsisVerticalOutline });
     }
 
     public alertButtons = [
@@ -139,6 +143,7 @@ export class HomePage implements OnInit {
             const diffDays = Math.floor(diffTime / (1000 * 3600 * 24));
             return diffDays <= 7;
         });
+        this.cdr.detectChanges();
 
     }
 
@@ -164,6 +169,7 @@ export class HomePage implements OnInit {
                 amPm
             }
         })
+        this.cdr.detectChanges();
     }
 
     handleFormMd() {
@@ -221,6 +227,7 @@ export class HomePage implements OnInit {
 
         this.groupMomentsByDate();
 
+        this.cdr.detectChanges();
         console.log(this.allMoment);
 
     }
@@ -259,6 +266,7 @@ export class HomePage implements OnInit {
             const dateB = new Date(b.date);
             return dateB.getTime() - dateA.getTime();
         });
+        this.cdr.detectChanges();
     }
 
     handleFormMoment() {
@@ -266,7 +274,13 @@ export class HomePage implements OnInit {
     }
 
     handleSubmitMoment(event: Event) {
-        this.ApiService.create(event, "Moment");
+
+        if (this.isEditMode) {
+            this.ApiService.update(this.currentItemToUpdate.id, event, "Moment");
+        } else {
+            this.ApiService.create(event, "Moment");
+        }
+        this.handleReset();
         this.isMomentFormOpen = false;
         this.getMoment();
     }
@@ -290,6 +304,7 @@ export class HomePage implements OnInit {
         })
         console.log(this.allAchievements);
 
+        this.cdr.detectChanges();
     }
 
     handleFormAchievements() {
@@ -298,7 +313,13 @@ export class HomePage implements OnInit {
 
     handleSubmitAchievement(event: Event) {
         console.log(event);
-        this.ApiService.create(event, "Achievements");
+
+        if (this.isEditMode) {
+            this.ApiService.update(this.currentItemToUpdate.id, event, "Achievements");
+        } else {
+            this.ApiService.create(event, "Achievements");
+        }
+        this.handleReset();
         this.isAchievementFormOpen = false;
         this.getAchievements();
     }
@@ -322,6 +343,7 @@ export class HomePage implements OnInit {
             }
         })
         console.log(this.allInspiration);
+        this.cdr.detectChanges();
     }
 
     handleFormInspiration() {
@@ -330,25 +352,15 @@ export class HomePage implements OnInit {
 
     handleSubmitInspiration(event: Event) {
         console.log(event);
-        this.ApiService.create(event, "Inspiration");
+
+        if (this.isEditMode) {
+            this.ApiService.update(this.currentItemToUpdate.id, event, "Inspiration");
+        } else {
+            this.ApiService.create(event, "Inspiration");
+        }
+        this.handleReset();
         this.isInspirationFormOpen = false;
         this.getInspiration();
-    }
-
-    showDeleteConfirmation(itemId: number): void {
-        this.currentItemIdToDelete = itemId;
-        this.isAlertOpen = true;
-    }
-
-    handleDeleteInspiration(ev: any) {
-        if (this.currentItemIdToDelete === 0) return
-
-        if (ev.detail.role === "confirm") {
-            this.ApiService.delete(this.currentItemIdToDelete, "Inspiration");
-            this.getInspiration();
-            this.toastHandler("Inspiration Successfully deleted")
-        }
-        this.isAlertOpen = false;
     }
 
     /* other functions */
@@ -414,5 +426,83 @@ export class HomePage implements OnInit {
     getMoodsForDay(day: string) {
         return this.allMoods.filter((mood: any) => mood.day === day);
     }
-    
+
+
+    async showActionSheet(item: any, category: string) {
+        const actionSheet = await this.actionSheetController.create({
+            header: 'Actions',
+            buttons: [
+                {
+                    text: 'Update',
+                    icon: 'pencil-outline',
+                    handler: () => {
+                        this.updateItem(item, category);
+                    },
+                },
+                {
+                    text: 'Delete',
+                    role: 'destructive',
+                    icon: 'trash-outline',
+                    handler: () => {
+                        this.deleteItem(item, category);
+                    },
+                },
+                {
+                    text: 'Cancel',
+                    role: 'cancel',
+                    icon: 'close-outline',
+                },
+            ],
+        });
+        await actionSheet.present();
+    }
+
+    updateItem(item: any, category: string) {
+        console.log(`Update ${category}`, item);
+        this.isEditMode = true;
+        if (category === "Moment") { this.isMomentFormOpen = true; }
+        if (category === "Achievements") { this.isAchievementFormOpen = true; }
+        if (category === "Inspiration") { this.isInspirationFormOpen = true; }
+
+        this.currentItemToUpdate = item;
+    }
+
+    /* done */
+    deleteItem(item: any, category: string) {
+        console.log(`Delete ${category}`, item);
+        this.showDeleteConfirmation(item.id, category)
+    }
+
+    showDeleteConfirmation(itemId: number, itemCategory: string): void {
+        this.currentItemIdToDelete = itemId;
+        this.currentItemCategoryToDelete = itemCategory
+        this.isAlertOpen = true;
+    }
+
+    handleDeleteItem(ev: any) {
+        if (this.currentItemIdToDelete === 0) return
+
+        if (ev.detail.role === "confirm") {
+            this.ApiService.delete(this.currentItemIdToDelete, this.currentItemCategoryToDelete);
+            this.toastHandler("Inspiration Successfully deleted")
+            if (this.currentItemCategoryToDelete === "Inspiration") {
+                this.getInspiration();
+            }
+
+            if (this.currentItemCategoryToDelete === "Moment") {
+                this.getMoment();
+            }
+            if (this.currentItemCategoryToDelete === "Achievements") {
+                this.getAchievements();
+            }
+        }
+        this.isAlertOpen = false;
+    }
+
+
+    handleReset() {
+        this.isEditMode = false;
+        this.currentItemToUpdate = {}
+    }
+
 }
