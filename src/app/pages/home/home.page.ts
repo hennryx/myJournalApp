@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonFab, IonFabButton, IonIcon, IonAlert, IonPopover, IonButton } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { add, pencilOutline, searchOutline, trashOutline, ellipsisVerticalOutline } from 'ionicons/icons';
+import { add, pencilOutline, searchOutline, trashOutline, ellipsisVerticalOutline, close, chevronForward, search } from 'ionicons/icons';
 import { FormComponent } from "./form/form.component";
 import { RestApiService } from 'src/app/services/rest-api.service';
 import { FormMomentComponent } from "./form-moment/form-moment.component";
@@ -12,6 +12,7 @@ import { FormInspirationComponent } from './form-inspiration/form-inspiration.co
 import { ViewMdComponent } from "./view-md/view-md.component";
 import { ToastController } from '@ionic/angular';
 import { ActionSheetController } from '@ionic/angular';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-home',
@@ -50,8 +51,11 @@ export class HomePage implements OnInit {
     isPopupOpen = false;
     selectedDay: string | null = null;
 
-    constructor(private ApiService: RestApiService, private toastController: ToastController, private actionSheetController: ActionSheetController, private cdr: ChangeDetectorRef ) {
-        addIcons({ pencilOutline, trashOutline, searchOutline, add, ellipsisVerticalOutline });
+    searchQuery: string = '';
+    searchResults: any[] = [];
+
+    constructor(private ApiService: RestApiService, private router: Router, private toastController: ToastController, private actionSheetController: ActionSheetController, private cdr: ChangeDetectorRef ) {
+        addIcons({searchOutline, search, close,chevronForward,add,ellipsisVerticalOutline,pencilOutline,trashOutline});
     }
 
     public alertButtons = [
@@ -83,6 +87,57 @@ export class HomePage implements OnInit {
             document.body.classList.toggle('dark', dark);
         }
     }
+
+    performSearch() {
+        if (!this.searchQuery.trim()) {
+          this.searchResults = [];
+          return;
+        }
+    
+        const categories = ['Myday', 'Moment', 'Achievements', 'Inspiration'];
+        let allResults: any[] = [];
+    
+        categories.forEach(category => {
+          const categoryItems = this.ApiService.getAll(category);
+          const filteredItems = categoryItems.filter((item: any) => 
+            this.matchSearchQuery(item, this.searchQuery)
+          ).map((item: any) => ({
+            ...item,
+            category: category
+          }));
+          
+          allResults = [...allResults, ...filteredItems];
+        });
+    
+        this.searchResults = allResults.sort((a, b) => 
+          new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
+      }
+    
+      matchSearchQuery(item: any, query: string): boolean {
+        const lowercaseQuery = query.toLowerCase().trim();
+        return (
+          item.title?.toLowerCase().includes(lowercaseQuery) ||
+          item.description?.toLowerCase().includes(lowercaseQuery)
+        );
+      }
+    
+      navigateToView(item: any) {
+        // Navigate to view page with item details
+        this.router.navigate(['/view'], { 
+          queryParams: { 
+            id: item.id, 
+            category: item.category 
+          } 
+        });
+      }
+    
+      closeSearch() {
+        // Emit an event or use a service to close the search modal
+        // For now, we'll use a simple method
+        document.dispatchEvent(new CustomEvent('closeSearch'));
+      }
+
 
     /* moods */
     openPopup(day: string): void {

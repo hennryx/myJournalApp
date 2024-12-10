@@ -1,0 +1,31 @@
+
+.title-container {
+    margin: 14.5px;
+
+    width: 100%;
+    place-items: end;
+    display: flex;
+    justify-content: space-between;
+
+}
+
+.title {
+
+    color: #EAA9A9;
+    font-family: "PP Right Gothic";
+    font-size: 23px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-transform: capitalize;
+}
+
+.img {
+    width: 24px;
+    height: 24px;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat !important;
+    background: url(home-assets/vec.svg);
+    animation: rotate-header 3s linear infinite;
+}
