@@ -27,18 +27,18 @@ export class FormAchievementsComponent implements OnChanges {
     constructor(private toastController: ToastController) {
         addIcons({ checkmarkCircleOutline, imageOutline });
         this.form = new FormGroup({
-            id: new FormControl(0),
             title: new FormControl('', [Validators.required]),
             description: new FormControl('', [Validators.required]),
             image: new FormControl(null, [Validators.required]),
-          });
+        });
     }
     ngOnChanges(changes: SimpleChanges): void {
-        if(changes['itemToUpdate']  && this.itemToUpdate){
+        if (changes['itemToUpdate'] && Object.keys(this.itemToUpdate).length > 0) {
             this.form.patchValue({
                 id: this.itemToUpdate.id,
                 title: this.itemToUpdate.title,
                 description: this.itemToUpdate.description,
+                image: this.itemToUpdate.image
             })
             this.imagePreview = this.itemToUpdate.image || null;
         }
@@ -52,16 +52,31 @@ export class FormAchievementsComponent implements OnChanges {
     onImageSelect(event: Event): void {
         const file = (event.target as HTMLInputElement).files?.[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                this.imagePreview = reader.result as string;
-            };
-            reader.readAsDataURL(file);
+            const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+            if (validImageTypes.includes(file.type)) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const base64Image = reader.result as string;
+                    this.imagePreview = base64Image
+
+                    this.form.patchValue({
+                        image: base64Image
+                    });
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Please select a valid image file (PNG, JPG, JPEG).');
+            }
         }
     }
 
     async onSubmit(event: Event): Promise<void> {
         event.preventDefault();
+        console.log(this.form.valid);
+        console.log(this.form.value);
+
+
+
         if (this.form.valid) {
             const formData = {
                 ...this.form.value,
@@ -99,5 +114,9 @@ export class FormAchievementsComponent implements OnChanges {
     closeForm() {
         this.resetForm()
         this.handleClose.emit();
+    }
+
+    isEmptyObject(obj: any): boolean {
+        return obj && Object.keys(obj).length === 0;
     }
 }

@@ -13,9 +13,9 @@ import { checkmarkCircleOutline, imageOutline } from 'ionicons/icons';
     standalone: true,
     imports: [IonIcon, IonButton, CommonModule, FormsModule, ReactiveFormsModule]
 })
-export class FormComponent implements OnChanges{
-    @Input() isOpenEditModal: boolean = false; 
-    @Input() itemToEdit: any = {} 
+export class FormComponent implements OnChanges {
+    @Input() isOpenEditModal: boolean = false;
+    @Input() itemToEdit: any = {}
     @Output() handleClose = new EventEmitter<void>();
     @Output() handleSubmit = new EventEmitter<any>();
 
@@ -32,7 +32,7 @@ export class FormComponent implements OnChanges{
         });
     }
     ngOnChanges(changes: SimpleChanges): void {
-        if(changes['itemToEdit'] && this.itemToEdit && this.isOpenEditModal) {
+        if (changes['itemToEdit'] && this.itemToEdit && this.isOpenEditModal) {
             this.notesForm.patchValue({
                 id: this.itemToEdit.id,
                 title: this.itemToEdit.title,
@@ -50,18 +50,23 @@ export class FormComponent implements OnChanges{
     onImageSelect(event: Event): void {
         const file = (event.target as HTMLInputElement).files?.[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                this.imagePreview = reader.result as string;
-            };
-            reader.readAsDataURL(file);
+            const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+            if (validImageTypes.includes(file.type)) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    this.imagePreview = reader.result as string;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Please select a valid image file (PNG, JPG, JPEG).');
+            }
         }
     }
 
 
     async onSubmit(event: Event) {
         event.preventDefault();
-        if(this.notesForm.valid) {
+        if (this.notesForm.valid) {
             const newItem = {
                 ...this.notesForm.value,
                 id: Date.now(),
@@ -80,7 +85,7 @@ export class FormComponent implements OnChanges{
 
             toast.present();
             this.resetForm();
-        }else {
+        } else {
             const toast = await this.toastController.create({
                 message: 'Please fill in all fields.',
                 duration: 3000,
@@ -89,7 +94,7 @@ export class FormComponent implements OnChanges{
 
             await toast.present();
         }
-        
+
     }
 
     resetForm(): void {

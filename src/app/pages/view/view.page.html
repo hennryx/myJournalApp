@@ -1,14 +1,76 @@
 <ion-header class="daily-journal-header">
-  <div class="title-container">
-      <div class="title">View</div>
-      <div class="img"></div>
-  </div>
+    <div class="title-container">
+        <div class="title">{{ category || 'View Details' }}</div>
+        <div class="img"></div>
+    </div>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">views</ion-title>
-    </ion-toolbar>
-  </ion-header>
+    <div class="min-h-screen bg-gray-200 dark:bg-orange-950 pb-8">
+        <div class=" shadow-xl p-2 flex items-center">
+            <ion-back-button defaultHref="/tabs/home" class="mr-4 text-gray-800 dark:text-white"></ion-back-button>
+        </div>
+
+        <div class="container mx-auto px-4 mt-6" *ngIf="itemDetails">
+            <div *ngIf="itemDetails.image" class="mb-6">
+                <img [src]="itemDetails.image" [alt]="itemDetails.title"
+                    class="w-full h-64 object-cover rounded-xl shadow-lg" />
+            </div>
+
+            <div class="bg-white dark:bg-red-200 rounded-xl p-4 shadow-md mb-4">
+                <div class="flex justify-between items-center mb-2">
+                    <div>
+                        <h2 class="text-lg font-semibold text-gray-800 dark:text-red-950 mb-2">Title</h2>
+                        <p class="text-gray-800 dark:text-red-950">{{itemDetails.title}}</p>
+                    </div>
+                    <div class="text-sm text-gray-500 dark:text-gray-500">
+                        {{ getCategoryIcon() }}
+                    </div>
+                </div>
+                
+                <h2 class="text-lg font-semibold text-gray-800 dark:text-red-950 mb-2">Description</h2>
+                <p class="text-gray-800 dark:text-red-950">
+                    {{ itemDetails.description || 'No description available' }}
+                </p>
+            </div>
+
+            <ng-container *ngIf="category === 'Myday'">
+                <div class="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-md">
+                    <h2 class="text-lg font-semibold text-gray-800 dark:text-red-950 mb-2">My Day Notes</h2>
+                    <p class="text-gray-800 dark:text-red-950">
+                        {{ itemDetails.additionalNotes || 'No additional notes' }}
+                    </p>
+                </div>
+            </ng-container>
+
+            <div class="mt-6 flex space-x-4">
+                <button (click)="handleEdit()"
+                    class="flex-1 bg-blue-500 text-white py-3 rounded-lg hover:bg-blue-600 transition flex items-center justify-center">
+                    <ion-icon name="pencil-outline" class="mr-2"></ion-icon>
+                    Edit
+                </button>
+                <button (click)="handleDelete()"
+                    class="flex-1 bg-red-500 text-white py-3 rounded-lg hover:bg-red-600 transition flex items-center justify-center">
+                    <ion-icon name="trash-outline" class="mr-2"></ion-icon>
+                    Delete
+                </button>
+            </div>
+        </div>
+
+        <div *ngIf="!itemDetails"
+            class="flex flex-col items-center justify-center min-h-[calc(100vh-100px)] text-center">
+            <ion-icon name="alert-circle-outline" class="text-6xl text-gray-400 mb-4"></ion-icon>
+            <h2 class="text-2xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                Item Not Found
+            </h2>
+            <p class="text-gray-500 dark:text-gray-400">
+                The item you're looking for doesn't exist or has been deleted.
+            </p>
+        </div>
+    </div>
+
+
+    <ion-alert [isOpen]="isAlertOpen" header="Are you sure you want to delete this?" [buttons]="alertButtons"
+        (didDismiss)="handleDeleteItem($event)">
+    </ion-alert>
 </ion-content>

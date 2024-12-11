@@ -1,31 +1,47 @@
-
-.title-container {
-    margin: 14.5px;
-
+.daily-journal-header {
+    background: #681F20;
     width: 100%;
-    place-items: end;
+    color: #f8f0e5;
+    font-family: 'Georgia', serif;
+    text-align: start;
     display: flex;
-    justify-content: space-between;
+    position: absolute;
+    place-items: end;
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
 
-}
 
-.title {
 
-    color: #EAA9A9;
-    font-family: "PP Right Gothic";
-    font-size: 23px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    text-transform: capitalize;
-}
+    .title-container {
+        margin: 14.5px;
 
-.img {
-    width: 24px;
-    height: 24px;
-    background-position: center;
-    background-size: contain;
-    background-repeat: no-repeat !important;
-    background: url(home-assets/vec.svg);
-    animation: rotate-header 3s linear infinite;
+        width: 100%;
+        place-items: end;
+        display: flex;
+        justify-content: space-between;
+
+    }
+
+    .title {
+
+        color: #EAA9A9;
+        font-family: "PP Right Gothic";
+        font-size: 23px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        text-transform: capitalize;
+    }
+
+    .img {
+        width: 24px;
+        height: 24px;
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat !important;
+        background: url(home-assets/vec.svg);
+        animation: rotate-header 3s linear infinite;
+    }
 }

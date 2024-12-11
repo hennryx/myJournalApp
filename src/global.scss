@@ -32,11 +32,12 @@
  * For more info, please see:
  * https://ionicframework.com/docs/theming/dark-mode
  */
-/* 
+
 @import "@ionic/angular/css/palettes/dark.always.css";
 @import "@ionic/angular/css/palettes/dark.class.css";
-@import '@ionic/angular/css/palettes/dark.system.css'; */
-@import "@ionic/angular/css/palettes/dark.system.css";
+@import '@ionic/angular/css/palettes/dark.system.css';
+/* @import "@ionic/angular/css/palettes/dark.system.css"; */
+
 body{
   --ion-background-color: #FEF8E5;
   --ion-text-color: #530909;
@@ -89,8 +90,7 @@ body.dark {
 
 .tab-button.tab-selected {
   color: white !important;
-}
-
+} 
 ion-tab-button.tab-selected ion-icon,
 ion-tab-button.tab-selected ion-label {
   color: white !important;
@@ -132,4 +132,19 @@ ion-content.emoji span {
   align-items: center;
   justify-content: center;
   padding: 5px; 
+}
+
+
+
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+body::-webkit-scrollbar-thumb {
+  background: transparent;
+}
+
+body::-webkit-scrollbar-track {
+  background: transparent;
 }

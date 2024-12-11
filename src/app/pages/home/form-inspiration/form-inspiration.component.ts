@@ -26,13 +26,12 @@ export class FormInspirationComponent implements OnChanges{
         addIcons({ checkmarkCircleOutline });
 
         this.form = new FormGroup({
-            id: new FormControl(0),
             title: new FormControl('', [Validators.required]),
             description: new FormControl('', [Validators.required]),
           });
     }
     ngOnChanges(changes: SimpleChanges): void {
-        if (changes['itemToUpdate'] && this.itemToUpdate) {
+        if (changes['itemToUpdate'] && Object.keys(this.itemToUpdate).length > 0) {
             this.form.patchValue({
                 id: this.itemToUpdate.id,
                 title: this.itemToUpdate.title,
@@ -81,5 +80,9 @@ export class FormInspirationComponent implements OnChanges{
     closeForm() {
         this.resetForm()
         this.handleClose.emit();
+    }
+
+    isEmptyObject(obj: any): boolean {
+        return obj && Object.keys(obj).length === 0;
     }
 }

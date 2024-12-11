@@ -22,13 +22,14 @@ export class SettingsPage implements OnInit {
     itemTodelete: number = 0;
     selectedItems: Set<number> = new Set();
     isAlertOpen: boolean = false;
+    name: string = ""
 
     constructor(private restApi: RestApiService, private actionSheetController: ActionSheetController, private toastController: ToastController, private cdr: ChangeDetectorRef) {
         addIcons({ ellipsisVerticalOutline });
     }
     ngOnInit(): void {
-        
         this.getTrash();
+        this.getName();
 
         if (localStorage.getItem('dark')) {
             const dark = JSON.parse(localStorage.getItem('dark') || "")
@@ -54,6 +55,12 @@ export class SettingsPage implements OnInit {
         },
     ];
 
+    getName() {
+        const storedName = localStorage.getItem('userName');
+        this.name = storedName || "";
+        console.log('Retrieved name:', this.name);
+    }
+
     toggleDarkMode() {
         document.body.classList.toggle('dark', this.darkMode);
         localStorage.setItem('dark', JSON.stringify(this.darkMode))
@@ -62,8 +69,6 @@ export class SettingsPage implements OnInit {
     getTrash() {
         this.trash = this.restApi.getAll('delete');
         this.cdr.detectChanges();
-        console.log("gagi");
-        
     }
 
     toggleSelectAll() {

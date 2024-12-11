@@ -4,12 +4,20 @@
     <div class="welcome-container">
 
         <h2>A Sanctuary for Your Thoughts</h2>
-        <div class="image"></div>
-        <div class="vector"></div>
-        <p>Start keeping track of your thoughts and experiences.</p>
-        <button class="get-started-btn" expand="block" routerLink="/tabs/home"
-            style="--background: none; --color: black; --border-color: transparent; --box-shadow: none;">
-            Get Started
-        </button>
+        <div class="image absolute"></div>
+
+        
+        <div class="flex flex-col gap-2 items-center justify-center">
+            <div class="flex flex-col z-10">
+                <label for="name" class="text-lg">Enter your name:</label>
+                <input type="text" name="name" placeholder="Enter your name" id="name" class="bg-transparent border border-gray-900 rounded-md p-2" required>
+            </div>
+            <div class="vector"></div>
+            <p>Start keeping track of your thoughts and experiences.</p>
+            <button class="get-started-btn" expand="block" (click)="handleNavigate()"
+                style="--background: none; --color: black; --border-color: transparent; --box-shadow: none;">
+                Get Started
+            </button>
+        </div>
     </div>
 </ion-content>

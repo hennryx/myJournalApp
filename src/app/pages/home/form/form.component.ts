@@ -20,7 +20,7 @@ export class FormComponent {
     imagePreview: string | null = null;
     title: string = '';
     selectedCardIndex: number | null = null;
-    cards: string[] = ['morning meditation', 'evening meditation', 'new year resolution', 'Christmas wish']; 
+    cards: string[] = ['morning meditation', 'evening meditation', 'new year resolution', 'Christmas wish'];
 
     constructor(private toastController: ToastController) {
         addIcons({ checkmarkCircleOutline, imageOutline });
@@ -34,11 +34,16 @@ export class FormComponent {
     onImageSelect(event: Event): void {
         const file = (event.target as HTMLInputElement).files?.[0];
         if (file) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                this.imagePreview = reader.result as string;
-            };
-            reader.readAsDataURL(file);
+            const validImageTypes = ['image/jpeg', 'image/png', 'image/jpg'];
+            if (validImageTypes.includes(file.type)) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    this.imagePreview = reader.result as string;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Please select a valid image file (PNG, JPG, JPEG).');
+            }
         }
     }
 
@@ -49,7 +54,7 @@ export class FormComponent {
 
     async onSubmit(event: Event): Promise<void> {
         event.preventDefault();
-        if (this.title && this.imagePreview ) {
+        if (this.title && this.imagePreview) {
             const newItem = {
                 id: Date.now(),
                 title: this.title,

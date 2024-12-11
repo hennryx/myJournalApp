@@ -3,7 +3,8 @@
 
         <div class="p-4 border-b border-gray-200 flex justify-between items-start">
             <h2 class="text-xl font-bold text-gray-800 mb-4">
-                {{ this.itemToUpdate ? 'Update Inspiration' : 'Add New Inspiration' }}</h2>
+                
+                {{ !this.isEmptyObject(this.itemToUpdate) ? 'Update ' : 'Save ' }} Inspiration </h2>
             <div>
                 <button (click)="closeForm()" class="text-black">x</button>
             </div>
@@ -32,7 +33,7 @@
             <div>
                 <ion-button type="submit" expand="block" class="w-full text-white py-2 rounded-lg"
                     [disabled]="form.invalid">
-                    {{ this.itemToUpdate ? 'Update' : 'Save' }}
+                    {{ !this.isEmptyObject(this.itemToUpdate) ? 'Update' : 'Save' }}
                 </ion-button>
             </div>
         </form>

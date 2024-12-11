@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonContent, IonHeader, IonFab, IonFabButton, IonIcon, IonAlert, IonPopover, IonButton } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { add, pencilOutline, searchOutline, trashOutline, ellipsisVerticalOutline, close, chevronForward, search } from 'ionicons/icons';
+import { add, pencilOutline, searchOutline, trashOutline, ellipsisVerticalOutline, close, chevronForward, search, closeCircleOutline, chevronBackOutline } from 'ionicons/icons';
 import { FormComponent } from "./form/form.component";
 import { RestApiService } from 'src/app/services/rest-api.service';
 import { FormMomentComponent } from "./form-moment/form-moment.component";
@@ -12,7 +12,7 @@ import { FormInspirationComponent } from './form-inspiration/form-inspiration.co
 import { ViewMdComponent } from "./view-md/view-md.component";
 import { ToastController } from '@ionic/angular';
 import { ActionSheetController } from '@ionic/angular';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 
 @Component({
     selector: 'app-home',
@@ -22,6 +22,7 @@ import { Router } from '@angular/router';
     imports: [IonPopover, IonAlert, IonIcon, IonFabButton, IonFab, IonContent, IonHeader, CommonModule, FormsModule, FormComponent, FormMomentComponent, FormAchievementsComponent, FormInspirationComponent, ViewMdComponent]
 })
 export class HomePage implements OnInit {
+    formattedDate: string = '';
     daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     isMdFormOpen: boolean = false;
     isMomentFormOpen: boolean = false;
@@ -51,11 +52,26 @@ export class HomePage implements OnInit {
     isPopupOpen = false;
     selectedDay: string | null = null;
 
+    isPopupSearchOpen = false;
     searchQuery: string = '';
     searchResults: any[] = [];
 
-    constructor(private ApiService: RestApiService, private router: Router, private toastController: ToastController, private actionSheetController: ActionSheetController, private cdr: ChangeDetectorRef ) {
-        addIcons({searchOutline, search, close,chevronForward,add,ellipsisVerticalOutline,pencilOutline,trashOutline});
+    constructor(
+        private ApiService: RestApiService,
+        private router: Router,
+        private toastController: ToastController,
+        private actionSheetController: ActionSheetController,
+        private cdr: ChangeDetectorRef
+    ) {
+        addIcons({ searchOutline, chevronBackOutline, search, close, chevronForward, add, ellipsisVerticalOutline, closeCircleOutline, pencilOutline, trashOutline });
+
+        this.router.events.subscribe(event => {
+            if (event instanceof NavigationEnd && event.url === '/tabs/home') {
+                this.refreshData();
+                this.checkIfUpdate();
+
+            }
+        });
     }
 
     public alertButtons = [
@@ -76,11 +92,17 @@ export class HomePage implements OnInit {
     ];
 
     ngOnInit() {
+        console.log("hey");
+        this.checkIfUpdate();
+
+        this.isPopupSearchOpen = false;
         this.getMd();
         this.getMoment();
         this.getAchievements();
         this.getInspiration();
         this.getMoods()
+
+        this.formattedDate = this.getFormattedDate(new Date());
 
         if (localStorage.getItem('dark')) {
             const dark = JSON.parse(localStorage.getItem('dark') || "")
@@ -88,55 +110,90 @@ export class HomePage implements OnInit {
         }
     }
 
+    checkIfUpdate() {
+        const navigation = this.router.getCurrentNavigation();
+        const state: any = navigation?.extras?.state;
+
+        if (state && state?.item && state?.category) {
+            this.updateItem(state?.item, state?.category);
+
+            this.router.navigate([], {
+                replaceUrl: true,
+                state: undefined
+            });
+        }
+    }
+
+    refreshData() {
+        this.isPopupSearchOpen = false;
+        this.searchQuery = "";
+        this.searchResults = []
+        this.getMd();
+        this.getMoment();
+        this.getAchievements();
+        this.getInspiration();
+        this.getMoods();
+    }
+
     performSearch() {
         if (!this.searchQuery.trim()) {
-          this.searchResults = [];
-          return;
+            this.searchResults = [];
+            return;
         }
-    
-        const categories = ['Myday', 'Moment', 'Achievements', 'Inspiration'];
+
+        const categories = ['Moment', 'Achievements', 'Inspiration'];
         let allResults: any[] = [];
-    
+
         categories.forEach(category => {
-          const categoryItems = this.ApiService.getAll(category);
-          const filteredItems = categoryItems.filter((item: any) => 
-            this.matchSearchQuery(item, this.searchQuery)
-          ).map((item: any) => ({
-            ...item,
-            category: category
-          }));
-          
-          allResults = [...allResults, ...filteredItems];
+            const categoryItems = this.ApiService.getAll(category);
+            const filteredItems = categoryItems.filter((item: any) =>
+                this.matchSearchQuery(item, this.searchQuery)
+            ).map((item: any) => ({
+                ...item,
+                category: category
+            }));
+
+            allResults = [...allResults, ...filteredItems];
         });
-    
-        this.searchResults = allResults.sort((a, b) => 
-          new Date(b.date).getTime() - new Date(a.date).getTime()
+
+        this.searchResults = allResults.sort((a, b) =>
+            new Date(b.date).getTime() - new Date(a.date).getTime()
         );
-      }
-    
-      matchSearchQuery(item: any, query: string): boolean {
+    }
+
+    matchSearchQuery(item: any, query: string): boolean {
         const lowercaseQuery = query.toLowerCase().trim();
         return (
-          item.title?.toLowerCase().includes(lowercaseQuery) ||
-          item.description?.toLowerCase().includes(lowercaseQuery)
+            item.title?.toLowerCase().includes(lowercaseQuery) ||
+            item.description?.toLowerCase().includes(lowercaseQuery)
         );
-      }
-    
-      navigateToView(item: any) {
-        // Navigate to view page with item details
-        this.router.navigate(['/view'], { 
-          queryParams: { 
-            id: item.id, 
-            category: item.category 
-          } 
+    }
+
+    navigateToView(item: any) {
+        this.router.navigate(['/view'], {
+            queryParams: {
+                id: item.id,
+                category: item.category
+            }
         });
-      }
-    
-      closeSearch() {
-        // Emit an event or use a service to close the search modal
-        // For now, we'll use a simple method
+        this.closePopup();
+    }
+
+    navigateItemToView(item: any, category: string) {
+        console.log(item);
+        
+        this.router.navigate(['/view'], {
+            queryParams: {
+                id: item.id,
+                category: category
+            }
+        });
+        this.closePopup();
+    }
+
+    closeSearch() {
         document.dispatchEvent(new CustomEvent('closeSearch'));
-      }
+    }
 
 
     /* moods */
@@ -145,9 +202,12 @@ export class HomePage implements OnInit {
         this.isPopupOpen = true;
     }
 
+    handleSearch() {
+        this.isPopupSearchOpen = true;
+    }
+
     closePopup(): void {
-        this.isPopupOpen = false;
-        this.selectedDay = null;
+        this.isPopupSearchOpen = false;
     }
 
     saveMood(emoji: string, day: string): void {
@@ -230,6 +290,7 @@ export class HomePage implements OnInit {
     handleFormMd() {
         console.log("hey");
         this.isMdFormOpen = !this.isMdFormOpen;
+        this.isEditMode = false;
     }
 
     handleSubmitMd(event: Event) {
@@ -326,6 +387,12 @@ export class HomePage implements OnInit {
 
     handleFormMoment() {
         this.isMomentFormOpen = !this.isMomentFormOpen;
+        this.isEditMode = false;
+        this.currentItemToUpdate = {}
+        this.router.navigate([], {
+            replaceUrl: true,
+            state: undefined
+        });
     }
 
     handleSubmitMoment(event: Event) {
@@ -364,6 +431,13 @@ export class HomePage implements OnInit {
 
     handleFormAchievements() {
         this.isAchievementFormOpen = !this.isAchievementFormOpen;
+        this.isEditMode = false;
+        this.currentItemToUpdate = {}
+
+        this.router.navigate([], {
+            replaceUrl: true,
+            state: undefined
+        });
     }
 
     handleSubmitAchievement(event: Event) {
@@ -403,6 +477,13 @@ export class HomePage implements OnInit {
 
     handleFormInspiration() {
         this.isInspirationFormOpen = !this.isInspirationFormOpen;
+        this.isEditMode = false;
+        this.currentItemToUpdate = {}
+
+        this.router.navigate([], {
+            replaceUrl: true,
+            state: undefined
+        });
     }
 
     handleSubmitInspiration(event: Event) {
@@ -457,10 +538,12 @@ export class HomePage implements OnInit {
 
     handleCloseMd() {
         this.isOpenView = !this.isOpenView;
+        this.isEditMode = false;
+        this.currentItemToUpdate = {}
     }
 
 
-    async toastHandler(message: string, isCustom = true) {
+    async toastHandler(message: string) {
 
         const toast = await this.toastController.create({
             icon: 'checkmark-circle-outline',
@@ -471,11 +554,6 @@ export class HomePage implements OnInit {
         });
 
         toast.present();
-    }
-
-    handleSearch() {
-        console.log("im clicked");
-
     }
 
     getMoodsForDay(day: string) {
@@ -520,6 +598,7 @@ export class HomePage implements OnInit {
         if (category === "Inspiration") { this.isInspirationFormOpen = true; }
 
         this.currentItemToUpdate = item;
+
     }
 
     /* done */
@@ -558,6 +637,25 @@ export class HomePage implements OnInit {
     handleReset() {
         this.isEditMode = false;
         this.currentItemToUpdate = {}
+    }
+
+    getFormattedDate(date: Date): string {
+        const firstDayOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+        const dayOfWeek = firstDayOfMonth.getDay();
+        const dayOfMonth = date.getDate();
+        const weekNumber = Math.ceil((dayOfMonth + dayOfWeek) / 7);
+
+        const month = date.toLocaleString('en-US', { month: 'short' });
+        const day = date.getDate();
+        const year = date.getFullYear();
+        const weekText = this.getOrdinalWeek(weekNumber);
+
+        return `${weekText} Week of ${month} ${day}, ${year}`;
+    }
+
+    getOrdinalWeek(weekNumber: number): string {
+        const ordinals = ['First', 'Second', 'Third', 'Fourth', 'Fifth'];
+        return ordinals[weekNumber - 1] || `${weekNumber}th`;
     }
 
 }

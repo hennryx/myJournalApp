@@ -9,8 +9,13 @@
     </div>
 </ion-header>
 
-<div class="fixed inset-0 z-50 bg-black/50 flex items-start pt-4 justify-center">
-    <div class="bg-white dark:bg-gray-800 w-11/12 max-w-md rounded-xl shadow-lg p-4">
+<div *ngIf="isPopupSearchOpen" class="fixed inset-0 z-50 bg-black/50 flex items-start pt-4 justify-center">
+    <div class="bg-red-200 dark:bg-orange-950 w-11/12 max-w-md rounded-xl shadow-lg p-4">
+        <div class="flex mb-2">
+            <button (click)="closePopup()">
+                <ion-icon name="chevron-back-outline" class="text-gray-500 dark:text-gray-300 text-2xl"></ion-icon>
+            </button>
+        </div>
         <div class="flex items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-2 mb-4">
             <ion-icon name="search" class="mr-2 text-gray-500 dark:text-gray-300"></ion-icon>
             <input type="text" [(ngModel)]="searchQuery" (input)="performSearch()"
@@ -25,7 +30,7 @@
             <ng-container *ngIf="searchResults.length > 0; else noResults">
                 <div class="space-y-2">
                     <div *ngFor="let result of searchResults" (click)="navigateToView(result)"
-                        class="bg-gray-100 dark:bg-gray-700 rounded-lg p-3 flex items-center justify-between cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                        class="bg-red-200 dark:bg-orange-950 rounded-lg p-3 flex items-center justify-between cursor-pointer hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
                         <div>
                             <h3 class="font-semibold text-gray-800 dark:text-white">{{ result.title }}</h3>
                             <p class="text-sm text-gray-600 dark:text-gray-400">
@@ -91,7 +96,7 @@
             <div class="container-mood">
                 <div class="row-md-1 mb-2">
                     <h3>weekly mood</h3>
-                    <p>Third Week of Nov 22, 2024</p>
+                    <p class="text-sm">{{ formattedDate }}</p>
                 </div>
                 <div class="row-md-2">
 
@@ -114,7 +119,7 @@
                                     </button>
                                 </div>
                             </div>
-                            <p>{{day}}</p>
+                            <p class="text-sm">{{day}}</p>
 
                             <ion-popover [trigger]="day" side="top" alignment="center" [dismissOnSelect]="true">
                                 <ng-template>
@@ -148,13 +153,11 @@
             </div>
         </div>
 
-        <div class="row-three gap-2 mb-4 mt-4">
-            <div class="moment-rw-one">
-                <h1>Moment of the Day</h1>
-            </div>
+        <div class="flex flex-col gap-2 mb-4">
+            <h3 class="text-2xl">Moment of the Day</h3>
 
-            <div class="moment-rw-two mb-2">
-                <div class="container bg-red-200 dark:bg-orange-950" *ngFor="let item of momentsToday; let i = index">
+            <div class="moment-rw-two mb-2 flex flex-row gap-2 w-full overflow-x-auto p-3">
+                <div class="bg-red-200 dark:bg-orange-950 min-w-full rounded-sm" *ngFor="let item of momentsToday; let i = index" >
                     <div class="flex flex-row justify-between p-2">
                         <div
                             class="w-16 h-16 bg-white bg-opacity-25 flex items-center justify-center flex-col rounded-xl">
@@ -168,7 +171,7 @@
                         </button>
                     </div>
 
-                    <div class="p-2 flex flex-col">
+                    <div class="p-2 flex flex-col" (click)="navigateItemToView(item, 'Moment')">
                         <div class="text-base text-[#530909] dark:text-[#F0E1A9] text-opacity-15">
                             {{item.title}}
                         </div>
@@ -177,35 +180,35 @@
                         </div>
                     </div>
 
-                    <div class="child-rw-three">
+                    <div class="child-rw-three" (click)="navigateItemToView(item, 'Moment')">
                         <img [src]="item.image" [alt]="item.title">
                     </div>
                 </div>
-
             </div>
-        </div>
-        <div class="p-2 rounded-lg mt-2">
-            <div class="row-four space-y-2 bg-red-200 dark:bg-orange-950 rounded-md">
-                <div *ngFor="let group of groupedMomentsArray" class="container-old-moment space-y-4">
-                    <div class="row-old-title flex justify-start items-center p-2">
-                        <p>{{ group.month }} {{ group.year }}</p>
-                    </div>
-                    <div class="child-container border-gray-300 flex flex-row items-end gap-2"
-                        *ngFor="let item of group.moments">
-                        <div
-                            class="w-14 h-14 bg-white bg-opacity-25 flex items-center justify-center flex-col rounded-xl">
-                            <p class="text-md text-[#530909] dark:text-[#F0E1A9]">{{ item.dayOfWeek }}</p>
-                            <span class="text-lg text-[#530909] dark:text-[#F0E1A9]">{{ item.dayOfMonth }}</span>
-                        </div>
-                        <div class=" h-14 w-full text-container flex flex-row justify-between">
-                            <div class="text-container flex flex-col justify-between">
-                                <div class="small-title text-xs">{{ item.title }}</div>
-                                <div class="description text-sm">{{ item.description }}</div>
-                            </div>
 
-                            <button (click)="showActionSheet(item, 'Moment')" class="btn-action">
-                                <ion-icon name="ellipsis-vertical-outline"></ion-icon>
-                            </button>
+            <div class="p-2 rounded-lg">
+                <div class="row-four space-y-2 bg-red-200 dark:bg-orange-950 rounded-md">
+                    <div *ngFor="let group of groupedMomentsArray" class="container-old-moment space-y-4">
+                        <div class="row-old-title flex justify-start items-center p-2">
+                            <p>{{ group.month }} {{ group.year }}</p>
+                        </div>
+                        <div class="child-container border-gray-300 flex flex-row items-end gap-2"
+                            *ngFor="let item of group.moments">
+                            <div
+                                class="w-14 h-14 bg-white bg-opacity-25 flex items-center justify-center flex-col rounded-xl">
+                                <p class="text-md text-[#530909] dark:text-[#F0E1A9]">{{ item.dayOfWeek }}</p>
+                                <span class="text-lg text-[#530909] dark:text-[#F0E1A9]">{{ item.dayOfMonth }}</span>
+                            </div>
+                            <div class=" h-14 w-full text-container flex flex-row justify-between" (click)="navigateItemToView(item, 'Moment')">
+                                <div class="text-container flex flex-col justify-between">
+                                    <div class="small-title text-xs">{{ item.title }}</div>
+                                    <div class="description text-sm">{{ item.description }}</div>
+                                </div>
+
+                                <button (click)="showActionSheet(item, 'Moment')" class="btn-action">
+                                    <ion-icon name="ellipsis-vertical-outline"></ion-icon>
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -227,14 +230,17 @@
             </div>
             <div class="container-content-5  flex flex-col h-full max-h-[65vh] overflow-y-auto p-2">
 
-                <div class="box-5 bg-red-200 dark:bg-orange-950" *ngFor="let item of allAchievements; let i = index">
+                <div class="box-5 bg-red-200 dark:bg-orange-950" *ngFor="let item of allAchievements; let i = index" >
 
                     <div class="date">
                         <p class="text-xs">{{item.month}} {{item.dayOfMonth}}, {{item.year}} - {{item.dayOfWeek}}</p>
                         <span class="text-xs">{{item.hours}}:{{item.minutes}} {{item.amPm}}</span>
                     </div>
 
-                    <div class="description">{{item.description}}</div>
+                    <div class="description" (click)="navigateItemToView(item, 'Achievements')">
+                        <small>{{item.title}}</small>
+                        <p>{{item.description}}</p>
+                    </div>
                     <div class="image flex flex-col gap-2 p-2 items-end">
                         <div class="flex items-end justify-end w-full mt-2">
                             <button (click)="showActionSheet(item, 'Achievements')" class="btn-action">
@@ -271,15 +277,15 @@
 
                     <div class="container-item ">
 
-                        <div class="box bg-red-200 dark:bg-orange-950"
-                            *ngFor="let item of allInspiration; let i = index">
+                        <div class="box bg-red-200 dark:bg-orange-950" *ngFor="let item of allInspiration; let i = index">
 
                             <div class="date">
                                 <p>{{item.month}} {{item.dayOfMonth}}, {{item.year}} - {{item.dayOfWeek}}</p>
                                 <span>{{item.hours}}:{{item.minutes}} {{item.amPm}}</span>
                             </div>
 
-                            <div class="description2 text-lg">{{item.description}}</div>
+                            <div class="description2 text-lg" (click)="navigateItemToView(item, 'Inspiration')">{{item.description}}</div>
+                            
                             <div class="image">
                                 <div class="wrapper"></div>
                                 <div class="pr-2 flex flex-row gap-2">
